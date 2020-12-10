@@ -36,7 +36,7 @@ public class RendererSystem extends EntitySystem {
             TextureComponent texture = textureComponentMapper.get(entity);
             PositionComponent position = positionComponentMapper.get(entity);
 
-            batch.draw(texture.texture, position.x, position.y);
+            batch.draw(texture.getTexture(), position.getX(), position.getY());
         }
         batch.end();
     }

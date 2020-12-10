@@ -17,18 +17,18 @@ public class GameScreen implements Screen {
     public GameScreen(TestGame testGame) {
         engine = new Engine();
 
-        initialiseEntities(engine);
-        initialiseSystems(engine);
+        initialiseEntities();
+        initialiseSystems();
     }
 
-    private void initialiseEntities(Engine engine) {//Should this live in its own class?
+    private void initialiseEntities() {//Should this live in its own class?
         Entity player = new Entity();
-        player.add(new TextureComponent(new Texture("player.png")));//TODO - This should use a texture atlas
-        player.add(new PositionComponent(400f, 240f));
+        player.add(TextureComponent.builder().withTexture(new Texture("player.png")).build());//TODO - This should use a texture atlas
+        player.add(PositionComponent.builder().withX(400f).withY(240f).build());
         engine.addEntity(player);
     }
 
-    private void initialiseSystems(Engine engine) {//Should this live in its own class?
+    private void initialiseSystems() {//Should this live in its own class?
         RendererSystem renderer = new RendererSystem();
         renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
         engine.addSystem(renderer);

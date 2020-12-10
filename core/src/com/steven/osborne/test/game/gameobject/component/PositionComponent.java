@@ -1,13 +1,12 @@
 package com.steven.osborne.test.game.gameobject.component;
 
 import com.badlogic.ashley.core.Component;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
+@Builder(setterPrefix = "with")
 public class PositionComponent implements Component {
-    public float x = 0.0f;
-    public float y = 0.0f;
-
-    public PositionComponent(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
+    private float x = 0.0f;
+    private float y = 0.0f;
 }
