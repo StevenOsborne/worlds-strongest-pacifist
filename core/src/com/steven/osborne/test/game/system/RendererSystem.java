@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.steven.osborne.test.game.gameobject.component.PositionComponent;
-import com.steven.osborne.test.game.gameobject.component.TextureComponent;
+import com.steven.osborne.test.game.gameobject.component.SpriteComponent;
 
 public class RendererSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
 
-    private ComponentMapper<TextureComponent> textureComponentMapper = ComponentMapper.getFor(TextureComponent.class);
+    private ComponentMapper<SpriteComponent> textureComponentMapper = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
 
     private SpriteBatch batch;
@@ -24,7 +24,7 @@ public class RendererSystem extends EntitySystem {
     }
 
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(TextureComponent.class, PositionComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
     }
 
     public void update(float deltaTime) {
@@ -33,10 +33,12 @@ public class RendererSystem extends EntitySystem {
 
         batch.begin();
         for (Entity entity : entities) {
-            TextureComponent texture = textureComponentMapper.get(entity);
+            SpriteComponent texture = textureComponentMapper.get(entity);
             PositionComponent position = positionComponentMapper.get(entity);
 
-            batch.draw(texture.getTexture(), position.getX(), position.getY());
+            if (texture.isVisible()) {
+                batch.draw(texture.getTexture(), position.getX(), position.getY());
+            }
         }
         batch.end();
     }
