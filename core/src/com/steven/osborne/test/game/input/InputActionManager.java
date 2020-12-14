@@ -1,4 +1,4 @@
-package com.steven.osborne.test.game;
+package com.steven.osborne.test.game.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

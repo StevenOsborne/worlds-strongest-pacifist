@@ -5,7 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.steven.osborne.test.game.InputActionManager;
+import com.steven.osborne.test.game.input.ControllerActionManager;
+import com.steven.osborne.test.game.input.InputActionManager;
 import com.steven.osborne.test.game.TestGame;
 import com.steven.osborne.test.game.gameobject.component.InputComponent;
 import com.steven.osborne.test.game.gameobject.component.PositionComponent;
@@ -19,9 +20,11 @@ public class GameScreen extends ScreenAdapter {
 
     private Engine engine;
     private InputActionManager inputActionManager; //TODO - Should this be declared here?
+    private ControllerActionManager controllerActionManager; //TODO - Should this be declared here?
 
     public GameScreen(TestGame testGame) {
         inputActionManager = new InputActionManager();
+        controllerActionManager = new ControllerActionManager();
         engine = new Engine();
 
         initialiseEntities();
@@ -46,6 +49,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(movementSystem);
         engine.addSystem(inputSystem);
         inputActionManager.subscribe(inputSystem);
+        controllerActionManager.subscribe(inputSystem);
     }
 
     @Override

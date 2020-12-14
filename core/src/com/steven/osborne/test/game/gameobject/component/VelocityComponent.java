@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder(setterPrefix = "with")
 public class VelocityComponent implements Component {
+    public static final float SPEED = 300f;
     private float x;
     private float y;
 }

@@ -1,4 +1,4 @@
-package com.steven.osborne.test.game;
+package com.steven.osborne.test.game.input;
 
 public enum InputAction {
     UP,
