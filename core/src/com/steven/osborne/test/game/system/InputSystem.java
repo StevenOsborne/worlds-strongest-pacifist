@@ -16,7 +16,6 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
 
     private ImmutableArray<Entity> entities;
 
-    private ComponentMapper<InputComponent> inputComponentMapper = ComponentMapper.getFor(InputComponent.class);
     private ComponentMapper<VelocityComponent> velocityComponentMapper = ComponentMapper.getFor(VelocityComponent.class);
 
     public void addedToEngine(Engine engine) {
@@ -31,7 +30,8 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
     public boolean onAction(InputAction action) {
 
         for (Entity entity : entities) {
-            VelocityComponent velocity = velocityComponentMapper.get(entity);//TODO - Basic input system is done. It will make player move in direction of button press. Make it work properly with controller
+            VelocityComponent velocity = velocityComponentMapper.get(entity);//TODO - This keyboard movement needs a lot of work
+
 
             if (action == InputAction.UP) {
                 velocity.setY(100f);
@@ -52,18 +52,21 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
 
     @Override
     public boolean onControllerInput(int axisIndex, float value) {
-        if (value < CONTROLLER_DEAD_ZONE && value > -CONTROLLER_DEAD_ZONE) {
-            value = 0f;
-        }
-        for (Entity entity : entities) {
-            VelocityComponent velocity = velocityComponentMapper.get(entity);
-            if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX) {
-                velocity.setX(value * SPEED);
+        if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX || axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
+            if (value < CONTROLLER_DEAD_ZONE && value > -CONTROLLER_DEAD_ZONE) {
+                value = 0f;
             }
-            if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
-                velocity.setY(-value * SPEED);
+            for (Entity entity : entities) {
+                VelocityComponent velocity = velocityComponentMapper.get(entity);
+                if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX) {
+                    velocity.setX(value * SPEED);
+                }
+                if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
+                    velocity.setY(-value * SPEED);
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 }
