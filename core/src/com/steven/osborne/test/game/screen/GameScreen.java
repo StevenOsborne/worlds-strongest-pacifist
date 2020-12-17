@@ -9,12 +9,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.steven.osborne.test.game.TestGame;
-import com.steven.osborne.test.game.gameobject.component.InputComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
-import com.steven.osborne.test.game.gameobject.component.SpriteComponent;
-import com.steven.osborne.test.game.gameobject.component.VelocityComponent;
+import com.steven.osborne.test.game.gameobject.component.*;
 import com.steven.osborne.test.game.input.ControllerActionManager;
 import com.steven.osborne.test.game.input.InputActionManager;
+import com.steven.osborne.test.game.system.CameraSystem;
 import com.steven.osborne.test.game.system.InputSystem;
 import com.steven.osborne.test.game.system.MovementSystem;
 import com.steven.osborne.test.game.system.RendererSystem;
@@ -48,6 +46,7 @@ public class GameScreen extends ScreenAdapter {
         player.add(PositionComponent.builder().withX(0f).withY(0f).build());
         player.add(VelocityComponent.builder().withX(0.0f).withY(0.0f).build());
         player.add(InputComponent.builder().build());
+        player.add(CameraFollowComponent.builder().build());
         engine.addEntity(player);
     }
 
@@ -55,9 +54,11 @@ public class GameScreen extends ScreenAdapter {
         RendererSystem renderer = new RendererSystem(camera);
         renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
         MovementSystem movementSystem = new MovementSystem();
+        CameraSystem cameraSystem = new CameraSystem(camera);
         InputSystem inputSystem = new InputSystem();
         engine.addSystem(renderer);
         engine.addSystem(movementSystem);
+        engine.addSystem(cameraSystem);
         engine.addSystem(inputSystem);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
