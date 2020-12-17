@@ -17,7 +17,7 @@ public class InputActionManager extends InputAdapter {
             entry(Input.Keys.DOWN, InputAction.DOWN),
             entry(Input.Keys.LEFT, InputAction.LEFT),
             entry(Input.Keys.RIGHT, InputAction.RIGHT),
-            entry(Input.Keys.MENU, InputAction.MENU)
+            entry(Input.Keys.ESCAPE, InputAction.MENU)
     );
 
     public InputActionManager() {

@@ -10,8 +10,8 @@ import com.steven.osborne.test.game.gameobject.component.PositionComponent;
 
 public class CameraSystem extends IteratingSystem {
 
-    private static final float CAMERA_FRAME_SIZE_HORIZONTAL = 10f;
-    private static final float CAMERA_FRAME_SIZE_VERTICAL = 10f;
+    private static final float CAMERA_FRAME_SIZE_HORIZONTAL = 5f;
+    private static final float CAMERA_FRAME_SIZE_VERTICAL = 5f;
 
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<CameraFollowComponent> cameraComponentMapper = ComponentMapper.getFor(CameraFollowComponent.class);

@@ -14,6 +14,9 @@ import com.steven.osborne.test.game.gameobject.component.SpriteComponent;
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
 
 public class RendererSystem extends EntitySystem {
+    private static final float HORIZONTAL_BOUNDARY = 18f;
+    private static final float VERTICAL_BOUNDARY = 32f;
+
     private ImmutableArray<Entity> entities;
 
     private ComponentMapper<SpriteComponent> textureComponentMapper = ComponentMapper.getFor(SpriteComponent.class);
@@ -55,9 +58,16 @@ public class RendererSystem extends EntitySystem {
         }
         batch.end();
 
+        createBoundary();
+    }
+
+    private void createBoundary() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.rectLine(29, -15, 29, 15, 0.1f);
+        shapeRenderer.rectLine(VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, 0.1f);//RIGHT
+        shapeRenderer.rectLine(-VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, -VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, 0.1f);//LEFT
+        shapeRenderer.rectLine(-VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, 0.1f);//TOP
+        shapeRenderer.rectLine(-VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, 0.1f);//BOTTOM
         shapeRenderer.end();
     }
 

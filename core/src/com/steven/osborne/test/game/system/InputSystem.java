@@ -2,6 +2,7 @@ package com.steven.osborne.test.game.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.steven.osborne.test.game.gameobject.component.InputComponent;
 import com.steven.osborne.test.game.gameobject.component.VelocityComponent;
 import com.steven.osborne.test.game.input.ActionListener;
@@ -45,6 +46,8 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             } else if (action == InputAction.RIGHT) {
                 velocity.setY(0.0f);
                 velocity.setX(100f);
+            } else if (action == InputAction.MENU) {
+                Gdx.app.exit();
             }
         }
         return true;
