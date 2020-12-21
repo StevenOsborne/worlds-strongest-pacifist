@@ -9,7 +9,6 @@ import com.steven.osborne.test.game.gameobject.component.CameraFollowComponent;
 import com.steven.osborne.test.game.gameobject.component.PositionComponent;
 
 public class CameraSystem extends IteratingSystem {
-
     private static final float CAMERA_FRAME_SIZE_HORIZONTAL = 5f;
     private static final float CAMERA_FRAME_SIZE_VERTICAL = 5f;
 

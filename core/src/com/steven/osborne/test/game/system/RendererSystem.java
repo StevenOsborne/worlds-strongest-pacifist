@@ -8,19 +8,23 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.steven.osborne.test.game.gameobject.component.BoundsComponent;
 import com.steven.osborne.test.game.gameobject.component.PositionComponent;
 import com.steven.osborne.test.game.gameobject.component.SpriteComponent;
 
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
 
 public class RendererSystem extends EntitySystem {
+    private static final boolean DEBUG = true;
     private static final float HORIZONTAL_BOUNDARY = 18f;
     private static final float VERTICAL_BOUNDARY = 32f;
 
     private ImmutableArray<Entity> entities;
+    private ImmutableArray<Entity> debugEntities;
 
     private ComponentMapper<SpriteComponent> textureComponentMapper = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
+    private ComponentMapper<BoundsComponent> boundsComponentMapper = ComponentMapper.getFor(BoundsComponent.class);
 
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -35,6 +39,10 @@ public class RendererSystem extends EntitySystem {
 
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
+
+        if (DEBUG) {
+            debugEntities = engine.getEntitiesFor(Family.all(BoundsComponent.class).get());
+        }
     }
 
     public void update(float deltaTime) {
@@ -59,6 +67,10 @@ public class RendererSystem extends EntitySystem {
         batch.end();
 
         createBoundary();
+
+        if (DEBUG) {
+            renderDebugEntities();
+        }
     }
 
     private void createBoundary() {
@@ -68,6 +80,16 @@ public class RendererSystem extends EntitySystem {
         shapeRenderer.rectLine(-VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, -VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, 0.1f);//LEFT
         shapeRenderer.rectLine(-VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, VERTICAL_BOUNDARY, HORIZONTAL_BOUNDARY, 0.1f);//TOP
         shapeRenderer.rectLine(-VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, VERTICAL_BOUNDARY, -HORIZONTAL_BOUNDARY, 0.1f);//BOTTOM
+        shapeRenderer.end();
+    }
+
+    private void renderDebugEntities() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(1, 0, 0, 1);
+        for (Entity entity : debugEntities) {
+            BoundsComponent bounds = boundsComponentMapper.get(entity);
+            shapeRenderer.rect(bounds.getBounds().getX(), bounds.getBounds().getY(), bounds.getBounds().getWidth(), bounds.getBounds().getHeight());
+        }
         shapeRenderer.end();
     }
 
