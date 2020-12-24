@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.steven.osborne.test.game.TestGame;
+import com.steven.osborne.test.game.factory.EnemyFactory;
 import com.steven.osborne.test.game.gameobject.component.*;
 import com.steven.osborne.test.game.input.ControllerActionManager;
 import com.steven.osborne.test.game.input.InputActionManager;
@@ -43,7 +44,6 @@ public class GameScreen extends ScreenAdapter {
     private void initialiseEntities() {
         createPlayer();
         createSpawners();
-//        createEnemy();
         createBoundary();
     }
 
@@ -83,22 +83,9 @@ public class GameScreen extends ScreenAdapter {
         engine.addEntity(player);
     }
 
-    private void createEnemy() {
-        Entity enemy = new Entity();
-        Texture enemyTexture = new Texture("enemy.png");
-        enemy.add(SpriteComponent.builder().texture(enemyTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
-        enemy.add(PositionComponent.builder().x(10f).y(0f).build());
-        enemy.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
-        enemy.add(BoundsComponent.builder().bounds(new Rectangle(10f, 0f, 1, 1)).build());
-        enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).collidingTags(Arrays.asList("Player")).build());
-        enemy.add(HealthComponent.builder().health(1).build());
-
-        engine.addEntity(enemy);
-    }
-
     private void createSpawners() {
         Entity enemySpawner = new Entity();
-        enemySpawner.add(SpawnComponent.builder().amount(10).delay(5f).build());
+        enemySpawner.add(SpawnComponent.builder().factory(new EnemyFactory()).amount(5).delay(15f).amountIncrement(1).delayDecrement(1f).build());
 
         engine.addEntity(enemySpawner);
     }
