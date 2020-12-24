@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder(setterPrefix = "with")
+@Builder
 public class BoundsComponent implements Component {
     private Rectangle bounds; //May need to create a more specific bounds class if we need more shapes
 }

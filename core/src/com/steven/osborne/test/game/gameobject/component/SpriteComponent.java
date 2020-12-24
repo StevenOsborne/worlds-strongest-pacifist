@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder(setterPrefix = "with")
+@Builder
 public class SpriteComponent implements Component {
     private Texture texture;
     private boolean visible;

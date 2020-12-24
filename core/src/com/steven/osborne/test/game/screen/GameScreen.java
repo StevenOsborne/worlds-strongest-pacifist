@@ -15,6 +15,8 @@ import com.steven.osborne.test.game.input.ControllerActionManager;
 import com.steven.osborne.test.game.input.InputActionManager;
 import com.steven.osborne.test.game.system.*;
 
+import java.util.Arrays;
+
 public class GameScreen extends ScreenAdapter {
     public static final float PIXELS_TO_METERS = 1.0f / 32.0f;
     public static final float VIRTUAL_WIDTH = 1920 * PIXELS_TO_METERS; //60.0
@@ -24,8 +26,8 @@ public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    private InputActionManager inputActionManager; //TODO - Should this be declared here?
-    private ControllerActionManager controllerActionManager; //TODO - Should this be declared here?
+    private InputActionManager inputActionManager;
+    private ControllerActionManager controllerActionManager;
 
     public GameScreen(TestGame testGame) {
         inputActionManager = new InputActionManager();
@@ -38,23 +40,14 @@ public class GameScreen extends ScreenAdapter {
         initialiseSystems();
     }
 
-    private void initialiseEntities() {//Should this live in its own class?
-        Entity player = new Entity();
-        Texture playerTexture = new Texture("player.png");
-        player.add(SpriteComponent.builder().withTexture(playerTexture).withVisible(true).build());//TODO - This should use a texture atlas - When we have more textures
-        player.add(PositionComponent.builder().withX(0f).withY(0f).build());
-        player.add(VelocityComponent.builder().withX(0.0f).withY(0.0f).build());
-        player.add(BoundsComponent.builder().withBounds(new Rectangle(0f, 0f, 1, 1)).build());//TODO - need to change this
-        player.add(InputComponent.builder().build());
-        player.add(CameraFollowComponent.builder().build());
-        player.add(CollisionComponent.builder().withTag("Player").withIsStatic(false).build());
-
+    private void initialiseEntities() {
+        createPlayer();
+        createSpawners();
+//        createEnemy();
         createBoundary();
-
-        engine.addEntity(player);
     }
 
-    private void initialiseSystems() {//Should this live in its own class?
+    private void initialiseSystems() {
         RendererSystem renderer = new RendererSystem(camera);
         renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
         MovementSystem movementSystem = new MovementSystem();
@@ -62,36 +55,74 @@ public class GameScreen extends ScreenAdapter {
         InputSystem inputSystem = new InputSystem();
         BoundsSystem boundsSystem = new BoundsSystem();
         CollisionSystem collisionSystem = new CollisionSystem();
+        HealthSystem healthSystem = new HealthSystem();
+        SpawnSystem spawnSystem = new SpawnSystem();
         engine.addSystem(movementSystem);
         engine.addSystem(cameraSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(boundsSystem);
         engine.addSystem(collisionSystem);
+        engine.addSystem(healthSystem);
+        engine.addSystem(spawnSystem);
         engine.addSystem(renderer);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
     }
 
+    private void createPlayer() {
+        Entity player = new Entity();
+        Texture playerTexture = new Texture("player.png");
+        player.add(SpriteComponent.builder().texture(playerTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
+        player.add(PositionComponent.builder().x(0f).y(0f).build());
+        player.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        player.add(BoundsComponent.builder().bounds(new Rectangle(0f, 0f, 1, 1)).build());
+        player.add(InputComponent.builder().build());
+        player.add(CameraFollowComponent.builder().build());
+        player.add(CollisionComponent.builder().tag("Player").isStatic(false).collidingTags(Arrays.asList("Enemy")).build());
+        player.add(HealthComponent.builder().health(1).build());
+        engine.addEntity(player);
+    }
+
+    private void createEnemy() {
+        Entity enemy = new Entity();
+        Texture enemyTexture = new Texture("enemy.png");
+        enemy.add(SpriteComponent.builder().texture(enemyTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
+        enemy.add(PositionComponent.builder().x(10f).y(0f).build());
+        enemy.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        enemy.add(BoundsComponent.builder().bounds(new Rectangle(10f, 0f, 1, 1)).build());
+        enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).collidingTags(Arrays.asList("Player")).build());
+        enemy.add(HealthComponent.builder().health(1).build());
+
+        engine.addEntity(enemy);
+    }
+
+    private void createSpawners() {
+        Entity enemySpawner = new Entity();
+        enemySpawner.add(SpawnComponent.builder().amount(10).delay(5f).build());
+
+        engine.addEntity(enemySpawner);
+    }
+
     private void createBoundary() {
         Entity leftWall = new Entity();
-        leftWall.add(PositionComponent.builder().withX(-33f).withY(-19f).build());
-        leftWall.add(BoundsComponent.builder().withBounds(new Rectangle(-33f, -19f, 1f, 38f)).build());
-        leftWall.add(CollisionComponent.builder().withIsStatic(true).withTag("Wall").build());
+        leftWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
+        leftWall.add(BoundsComponent.builder().bounds(new Rectangle(-33f, -19f, 1f, 38f)).build());
+        leftWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
 
         Entity rightWall = new Entity();
-        rightWall.add(PositionComponent.builder().withX(32f).withY(-19f).build());
-        rightWall.add(BoundsComponent.builder().withBounds(new Rectangle(32f, -19f, 1f, 38f)).build());
-        rightWall.add(CollisionComponent.builder().withIsStatic(true).withTag("Wall").build());
+        rightWall.add(PositionComponent.builder().x(32f).y(-19f).build());
+        rightWall.add(BoundsComponent.builder().bounds(new Rectangle(32f, -19f, 1f, 38f)).build());
+        rightWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
 
         Entity topWall = new Entity();
-        topWall.add(PositionComponent.builder().withX(-33f).withY(18f).build());
-        topWall.add(BoundsComponent.builder().withBounds(new Rectangle(-33f, 18f, 66f, 1f)).build());
-        topWall.add(CollisionComponent.builder().withIsStatic(true).withTag("Wall").build());
+        topWall.add(PositionComponent.builder().x(-33f).y(18f).build());
+        topWall.add(BoundsComponent.builder().bounds(new Rectangle(-33f, 18f, 66f, 1f)).build());
+        topWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
 
         Entity bottomWall = new Entity();
-        bottomWall.add(PositionComponent.builder().withX(-33f).withY(-19f).build());
-        bottomWall.add(BoundsComponent.builder().withBounds(new Rectangle(-33f, -19f, 66f, 1f)).build());
-        bottomWall.add(CollisionComponent.builder().withIsStatic(true).withTag("Wall").build());
+        bottomWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
+        bottomWall.add(BoundsComponent.builder().bounds(new Rectangle(-33f, -19f, 66f, 1f)).build());
+        bottomWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
 
         engine.addEntity(leftWall);
         engine.addEntity(rightWall);

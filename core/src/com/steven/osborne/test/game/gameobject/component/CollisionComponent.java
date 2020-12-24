@@ -5,10 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-@Builder(setterPrefix = "with")
+@Builder
 public class CollisionComponent implements Component {
     private boolean isStatic;
     private String tag;
+    private List<String> collidingTags;
 }

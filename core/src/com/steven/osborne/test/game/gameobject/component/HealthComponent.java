@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class PositionComponent implements Component {
-    private float x;
-    private float y;
+public class HealthComponent implements Component {
+    private int health;
 }
