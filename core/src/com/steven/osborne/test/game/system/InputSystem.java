@@ -33,7 +33,6 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
         for (Entity entity : entities) {
             VelocityComponent velocity = velocityComponentMapper.get(entity);//TODO - This keyboard movement needs a lot of work
 
-
             if (action == InputAction.UP) {
                 velocity.setY(100f);
                 velocity.setX(0.0f);
@@ -46,9 +45,11 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             } else if (action == InputAction.RIGHT) {
                 velocity.setY(0.0f);
                 velocity.setX(100f);
-            } else if (action == InputAction.MENU) {
-                Gdx.app.exit();
             }
+        }
+
+        if (action == InputAction.MENU) {
+            Gdx.app.exit();
         }
         return true;
     }
