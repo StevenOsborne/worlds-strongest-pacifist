@@ -31,6 +31,11 @@ public class ControllerActionManager extends ControllerAdapter {
     }
 
     @Override
+    public void disconnected (Controller controller) {
+        connectedControllers.removeValue(controller, true);
+    }
+
+    @Override
     public boolean axisMoved (Controller controller, int axisIndex, float value) {
         for (ControllerListener controllerListener : controllerListeners) {
             if (controllerListener.onControllerInput(axisIndex, value)) {
