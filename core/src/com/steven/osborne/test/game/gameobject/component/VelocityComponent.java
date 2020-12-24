@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class VelocityComponent implements Component {
-    public static final float SPEED = 15;
+    public static final float PLAYER_SPEED = 15;
+    public static final float ENEMY_SPEED = 10;
     private float x;
     private float y;
 }

@@ -12,8 +12,10 @@ import lombok.Setter;
 public class SpawnComponent implements Component {
     private int amount;
     private int amountIncrement;
+    private int maximumAmount;
     private float delay;
     private float delayDecrement;
+    private float minimumDelay;
     private float seconds;
     private EntityFactory factory;
 }

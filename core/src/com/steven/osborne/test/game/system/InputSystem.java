@@ -11,7 +11,7 @@ import com.steven.osborne.test.game.input.InputAction;
 import org.libsdl.SDL;
 
 import static com.steven.osborne.test.game.gameobject.component.InputComponent.CONTROLLER_DEAD_ZONE;
-import static com.steven.osborne.test.game.gameobject.component.VelocityComponent.SPEED;
+import static com.steven.osborne.test.game.gameobject.component.VelocityComponent.PLAYER_SPEED;
 
 public class InputSystem extends EntitySystem implements ActionListener, ControllerListener {
 
@@ -62,10 +62,10 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             for (Entity entity : entities) {
                 VelocityComponent velocity = velocityComponentMapper.get(entity);
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX) {
-                    velocity.setX(value * SPEED);
+                    velocity.setX(value * PLAYER_SPEED);
                 }
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
-                    velocity.setY(-value * SPEED);
+                    velocity.setY(-value * PLAYER_SPEED);
                 }
             }
             return true;

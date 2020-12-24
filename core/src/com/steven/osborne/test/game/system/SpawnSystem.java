@@ -23,8 +23,11 @@ public class SpawnSystem extends IteratingSystem {
             for (int i = 0; i < spawnComponent.getAmount(); i++) {
                 spawnComponent.getFactory().create(getEngine(), i);
             }
-            spawnComponent.setAmount(spawnComponent.getAmount() + spawnComponent.getAmountIncrement());
-            spawnComponent.setDelay(spawnComponent.getDelay() - spawnComponent.getDelayDecrement());
+
+            spawnComponent.setAmount(Math.min(spawnComponent.getAmount() + spawnComponent.getAmountIncrement(), spawnComponent.getMaximumAmount()));
+
+            spawnComponent.setDelay(Math.max(spawnComponent.getDelay() - spawnComponent.getDelayDecrement(), spawnComponent.getMinimumDelay()));
+
             spawnComponent.setSeconds(0);
         }
     }

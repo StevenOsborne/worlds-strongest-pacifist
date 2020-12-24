@@ -57,6 +57,7 @@ public class GameScreen extends ScreenAdapter {
         CollisionSystem collisionSystem = new CollisionSystem();
         HealthSystem healthSystem = new HealthSystem();
         SpawnSystem spawnSystem = new SpawnSystem();
+        AiSystem aiSystem = new AiSystem();
         engine.addSystem(movementSystem);
         engine.addSystem(cameraSystem);
         engine.addSystem(inputSystem);
@@ -64,6 +65,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(collisionSystem);
         engine.addSystem(healthSystem);
         engine.addSystem(spawnSystem);
+        engine.addSystem(aiSystem);
         engine.addSystem(renderer);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
@@ -85,7 +87,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void createSpawners() {
         Entity enemySpawner = new Entity();
-        enemySpawner.add(SpawnComponent.builder().factory(new EnemyFactory()).amount(5).delay(15f).amountIncrement(1).delayDecrement(1f).build());
+        enemySpawner.add(SpawnComponent.builder().factory(new EnemyFactory()).amount(5).delay(10f).amountIncrement(1).delayDecrement(1f).minimumDelay(2f).maximumAmount(10).build());
 
         engine.addEntity(enemySpawner);
     }

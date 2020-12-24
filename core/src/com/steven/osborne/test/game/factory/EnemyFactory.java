@@ -20,6 +20,7 @@ public class EnemyFactory implements EntityFactory {
         enemy.add(BoundsComponent.builder().bounds(new Rectangle(10f + (count * 1.5f), 0f, 1, 1)).build());
         enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).collidingTags(Arrays.asList("Player")).build());
         enemy.add(HealthComponent.builder().health(1).build());
+        enemy.add(AiComponent.builder().build());
 
         engine.addEntity(enemy);
     }
