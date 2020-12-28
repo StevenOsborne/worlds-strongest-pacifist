@@ -16,7 +16,7 @@ import com.steven.osborne.test.game.gameobject.component.SpriteComponent;
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
 
 public class RendererSystem extends EntitySystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final float HORIZONTAL_BOUNDARY = 18f;
     private static final float VERTICAL_BOUNDARY = 32f;
 
@@ -103,7 +103,11 @@ public class RendererSystem extends EntitySystem {
         shapeRenderer.setColor(1, 0, 0, 1);
         for (Entity entity : debugEntities) {
             BoundsComponent bounds = boundsComponentMapper.get(entity);
-            shapeRenderer.rect(bounds.getRectangle().getX(), bounds.getRectangle().getY(), bounds.getRectangle().getWidth(), bounds.getRectangle().getHeight());
+            if (bounds.getRectangle() != null) {
+                shapeRenderer.rect(bounds.getRectangle().getX(), bounds.getRectangle().getY(), bounds.getRectangle().getWidth(), bounds.getRectangle().getHeight());
+            } else if (bounds.getCircle() != null) {
+                shapeRenderer.circle(bounds.getCircle().x, bounds.getCircle().y, bounds.getCircle().radius);
+            }
         }
         shapeRenderer.end();
     }
