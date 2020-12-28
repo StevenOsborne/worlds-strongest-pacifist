@@ -1,10 +1,13 @@
 package com.steven.osborne.test.game.gameobject.component;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.Rectangle;
 import com.steven.osborne.test.game.factory.EntityFactory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,4 +21,5 @@ public class SpawnComponent implements Component {
     private float minimumDelay;
     private float seconds;
     private EntityFactory factory;
+    private List<Rectangle> spawnAreas;
 }

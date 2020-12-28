@@ -98,7 +98,7 @@ public class RendererSystem extends EntitySystem {
         shapeRenderer.end();
     }
 
-    private void renderDebugEntities() { //TODO - This will need work for circles
+    private void renderDebugEntities() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 0, 0, 1);
         for (Entity entity : debugEntities) {

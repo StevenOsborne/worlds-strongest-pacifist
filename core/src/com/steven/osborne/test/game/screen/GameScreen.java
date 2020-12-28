@@ -18,6 +18,7 @@ import com.steven.osborne.test.game.input.InputActionManager;
 import com.steven.osborne.test.game.system.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class GameScreen extends ScreenAdapter {
     public static final float PIXELS_TO_METERS = 1.0f / 32.0f;
@@ -90,10 +91,31 @@ public class GameScreen extends ScreenAdapter {
 
     private void createSpawners() {
         Entity enemySpawner = new Entity();
-        enemySpawner.add(SpawnComponent.builder().factory(new EnemyFactory()).amount(5).delay(10f).amountIncrement(1).delayDecrement(1f).minimumDelay(2f).maximumAmount(10).build());
+        enemySpawner.add(SpawnComponent.builder()
+                .factory(new EnemyFactory())
+                .amount(5)
+                .delay(10f)
+                .amountIncrement(1)
+                .delayDecrement(1f)
+                .minimumDelay(2f)
+                .maximumAmount(10)
+                .spawnAreas(Arrays.asList(new Rectangle(-31.5f, 7.5f, 10f, 10f),
+                        new Rectangle(21.5f, 7.5f, 10f, 10f),
+                        new Rectangle(-31.5f, -17.5f, 10f, 10f),
+                        new Rectangle(21.5f, -17.5f, 10f, 10f)))
+                .build());
 
         Entity barbellSpawner = new Entity();
-        barbellSpawner.add(SpawnComponent.builder().factory(new BarbellFactory()).amount(1).delay(10f).amountIncrement(0).delayDecrement(1f).minimumDelay(2f).maximumAmount(1).build());
+        barbellSpawner.add(SpawnComponent.builder()
+                .factory(new BarbellFactory())
+                .amount(1)
+                .delay(10f)
+                .amountIncrement(0)
+                .delayDecrement(1f)
+                .minimumDelay(2f)
+                .maximumAmount(1)
+                .spawnAreas(Collections.singletonList(new Rectangle(-31f, -17f, 62f, 34f)))
+                .build());
 
         engine.addEntity(enemySpawner);
         engine.addEntity(barbellSpawner);
