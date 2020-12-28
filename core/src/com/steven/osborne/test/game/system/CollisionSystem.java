@@ -6,10 +6,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.steven.osborne.test.game.gameobject.component.BoundsComponent;
-import com.steven.osborne.test.game.gameobject.component.CollisionComponent;
-import com.steven.osborne.test.game.gameobject.component.HealthComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
+import com.badlogic.gdx.math.Intersector;
+import com.steven.osborne.test.game.gameobject.component.*;
 
 public class CollisionSystem extends IteratingSystem {
 
@@ -17,6 +15,7 @@ public class CollisionSystem extends IteratingSystem {
     private ComponentMapper<BoundsComponent> boundsComponentMapper = ComponentMapper.getFor(BoundsComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<HealthComponent> healthComponentMapper = ComponentMapper.getFor(HealthComponent.class);
+    private ComponentMapper<ExplosionComponent> explosionComponentMapper = ComponentMapper.getFor(ExplosionComponent.class);
 
     private ImmutableArray<Entity> collisionEntities;
 
@@ -42,62 +41,72 @@ public class CollisionSystem extends IteratingSystem {
                 if (entity != collisionEntity) {
                     BoundsComponent boundsComponent1 = boundsComponentMapper.get(collisionEntity);
                     CollisionComponent collisionComponent1 = collisionComponentMapper.get(collisionEntity);
-                    if (boundsComponent.getBounds().overlaps(boundsComponent1.getBounds())) {
-                        resolveCollision(entity, collisionComponent, positionComponent, boundsComponent, boundsComponent1, collisionComponent1);
+                    if (boundsComponent.getRectangle() != null && boundsComponent1.getRectangle() != null) { //Rectangle, Rectangle
+                        if (boundsComponent.getRectangle().overlaps(boundsComponent1.getRectangle())) {
+                            resolveCollision(collisionEntity, collisionComponent, positionComponent, boundsComponent, boundsComponent1, collisionComponent1);
+                        }
+                    } else if (boundsComponent.getCircle() != null && boundsComponent1.getRectangle() != null) { //Circle, Rectangle
+                        if (Intersector.overlaps(boundsComponent.getCircle(), boundsComponent1.getRectangle())) {
+                            resolveCollision(collisionEntity, collisionComponent, positionComponent, boundsComponent, boundsComponent1, collisionComponent1);
+                        }
+                    } else if (boundsComponent.getCircle() != null && boundsComponent1.getCircle() != null) {//Circle, Circle
+                        if (Intersector.overlaps(boundsComponent.getCircle(), boundsComponent1.getCircle())) {
+                            System.out.println("Circle, circle collision");
+                        }
                     }
                 }
             }
         }
     }
 
-    //TODO - This will eventually need to handle destructive collisions (player and enemies)
-    //TODO - Collision with other entities (enemies, barbells, multiplier) only need to know if a collision happens, not direction
-    private void resolveCollision(Entity collidingEntity,
+    private void resolveCollision(Entity collidedEntity,
                                   CollisionComponent collidingCollisionComponent,
                                   PositionComponent collidingPositionComponent,
                                   BoundsComponent collidingBoundsComponent,
                                   BoundsComponent collidedBoundsComponent,
                                   CollisionComponent collidedCollisionComponent) {
 
-        resolveSolidCollision(collidingPositionComponent, collidingBoundsComponent, collidedBoundsComponent);
+        if (collidingCollisionComponent.getCollideTags().contains(collidedCollisionComponent.getTag())) {
+            resolveSolidCollision(collidingPositionComponent, collidingBoundsComponent, collidedBoundsComponent);
+        }
 
-        if (collidingCollisionComponent.getCollidingTags().contains(collidedCollisionComponent.getTag())) {
-            if (healthComponentMapper.has(collidingEntity)) {
-                healthComponentMapper.get(collidingEntity).setHealth(0);
+        if (collidingCollisionComponent.getDestroyTags().contains(collidedCollisionComponent.getTag())) {
+            if (healthComponentMapper.has(collidedEntity)) {
+                healthComponentMapper.get(collidedEntity).setHealth(0);
             }
         }
     }
 
     //TODO - It's kind of crap, but it works for now - THIS DOES NOT WORK AT BELOW 50FPS
     private void resolveSolidCollision(PositionComponent collidingPositionComponent, BoundsComponent collidingBoundsComponent, BoundsComponent collidedBoundsComponent) {
-        float collidingLeft = collidingBoundsComponent.getBounds().getX();
-        float collidingRight = collidingLeft + collidingBoundsComponent.getBounds().getWidth();
-        float collidingBottom = collidingBoundsComponent.getBounds().getY();
-        float collidingTop = collidingBottom + collidingBoundsComponent.getBounds().getHeight();
+        float collidingLeft = collidingBoundsComponent.getRectangle().getX();
+        float collidingRight = collidingLeft + collidingBoundsComponent.getRectangle().getWidth();
+        float collidingBottom = collidingBoundsComponent.getRectangle().getY();
+        float collidingTop = collidingBottom + collidingBoundsComponent.getRectangle().getHeight();
 
-        float collidedLeft = collidedBoundsComponent.getBounds().getX();
-        float collidedRight = collidedLeft + collidedBoundsComponent.getBounds().getWidth();
-        float collidedBottom = collidedBoundsComponent.getBounds().getY();
-        float collidedTop = collidedBottom + collidedBoundsComponent.getBounds().getHeight();
+        float collidedLeft = collidedBoundsComponent.getRectangle().getX();
+        float collidedRight = collidedLeft + collidedBoundsComponent.getRectangle().getWidth();
+        float collidedBottom = collidedBoundsComponent.getRectangle().getY();
+        float collidedTop = collidedBottom + collidedBoundsComponent.getRectangle().getHeight();
 
         if (collidingRight > collidedLeft && collidingRight < collidedRight) {
             collidingPositionComponent.setX(collidingPositionComponent.getX() - 0.3f);
-            collidingBoundsComponent.getBounds().setX(collidingBoundsComponent.getBounds().getX() - 0.3f);
+            collidingBoundsComponent.getRectangle().setX(collidingBoundsComponent.getRectangle().getX() - 0.3f);
         }
 
         if (collidingLeft < collidedRight && collidingLeft > collidedLeft) {
             collidingPositionComponent.setX(collidingPositionComponent.getX() + 0.3f);
-            collidingBoundsComponent.getBounds().setX(collidingBoundsComponent.getBounds().getX() + 0.3f);
+            collidingBoundsComponent.getRectangle().setX(collidingBoundsComponent.getRectangle().getX() + 0.3f);
         }
 
         if (collidingTop > collidedBottom && collidingTop < collidedTop) {
             collidingPositionComponent.setY(collidingPositionComponent.getY() - 0.3f);
-            collidingBoundsComponent.getBounds().setY(collidingBoundsComponent.getBounds().getY() - 0.3f);
+            collidingBoundsComponent.getRectangle().setY(collidingBoundsComponent.getRectangle().getY() - 0.3f);
         }
 
         if (collidingBottom < collidedTop && collidingBottom > collidedBottom) {
             collidingPositionComponent.setY(collidingPositionComponent.getY() + 0.3f);
-            collidingBoundsComponent.getBounds().setY(collidingBoundsComponent.getBounds().getY() + 0.3f);
+            collidingBoundsComponent.getRectangle().setY(collidingBoundsComponent.getRectangle().getY() + 0.3f);
         }
     }
 }

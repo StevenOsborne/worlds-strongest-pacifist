@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -13,5 +14,14 @@ import java.util.List;
 public class CollisionComponent implements Component {
     private boolean isStatic;
     private String tag;
-    private List<String> collidingTags;
+    private List<String> destroyTags;
+    private List<String> collideTags;
+
+    public List<String> getDestroyTags() {
+        return destroyTags != null ? destroyTags : Collections.emptyList();
+    }
+
+    public List<String> getCollideTags() {
+        return collideTags != null ? collideTags : Collections.emptyList();
+    }
 }
