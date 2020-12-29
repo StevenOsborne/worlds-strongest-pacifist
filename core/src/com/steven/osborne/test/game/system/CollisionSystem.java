@@ -77,6 +77,7 @@ public class CollisionSystem extends IteratingSystem {
         }
     }
 
+    //TODO - Could try to tie collision into movement? Have leftBlocked etc which is set here and checked in movement code
     //TODO - It's kind of crap, but it works for now - THIS DOES NOT WORK AT BELOW 50FPS
     private void resolveSolidCollision(PositionComponent collidingPositionComponent, BoundsComponent collidingBoundsComponent, BoundsComponent collidedBoundsComponent) {
         float collidingLeft = collidingBoundsComponent.getRectangle().getX();

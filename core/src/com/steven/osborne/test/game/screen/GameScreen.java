@@ -61,15 +61,17 @@ public class GameScreen extends ScreenAdapter {
         SpawnSystem spawnSystem = new SpawnSystem();
         AiSystem aiSystem = new AiSystem();
         ExplosionSystem explosionSystem = new ExplosionSystem();
+        ParentSystem parentSystem = new ParentSystem();
         engine.addSystem(movementSystem);
+        engine.addSystem(parentSystem);
         engine.addSystem(cameraSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(boundsSystem);
         engine.addSystem(collisionSystem);
-        engine.addSystem(deathSystem);
         engine.addSystem(spawnSystem);
         engine.addSystem(aiSystem);
         engine.addSystem(explosionSystem);
+        engine.addSystem(deathSystem);
         engine.addSystem(renderer);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
