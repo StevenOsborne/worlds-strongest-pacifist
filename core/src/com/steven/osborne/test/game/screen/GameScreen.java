@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -64,11 +65,11 @@ public class GameScreen extends ScreenAdapter {
         ParentSystem parentSystem = new ParentSystem();
         LifetimeSystem lifetimeSystem = new LifetimeSystem();
         engine.addSystem(movementSystem);
+        engine.addSystem(collisionSystem);
         engine.addSystem(parentSystem);
         engine.addSystem(cameraSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(boundsSystem);
-        engine.addSystem(collisionSystem);
         engine.addSystem(spawnSystem);
         engine.addSystem(aiSystem);
         engine.addSystem(explosionSystem);
@@ -90,7 +91,16 @@ public class GameScreen extends ScreenAdapter {
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
+
+        Entity playerInset = new Entity();
+        playerInset.add(PositionComponent.builder().x(0f).y(0f).build());
+        playerInset.add(BoundsComponent.builder().rectangle(new Rectangle(0f, 0f, 0.5f, 0.5f)).build());
+        playerInset.add(CollisionComponent.builder().tag("PlayerInset").isStatic(false).build());
+        playerInset.add(ParentComponent.builder().parent(player).relativePosition(new Vector2(0.25f, 0.25f)).mode(ParentComponent.Mode.CHILD_KILL_PARENT).build());
+        playerInset.add(HealthComponent.builder().health(1).build());
+
         engine.addEntity(player);
+        engine.addEntity(playerInset);
     }
 
     private void createSpawners() {

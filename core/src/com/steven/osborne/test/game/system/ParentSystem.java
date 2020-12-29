@@ -31,7 +31,11 @@ public class ParentSystem extends IteratingSystem {
             HealthComponent healthComponent = healthComponentMapper.get(entity);
             HealthComponent parentHealthComponent = healthComponentMapper.get(parentComponent.getParent());
 
-            healthComponent.setHealth(parentHealthComponent.getHealth());
+            if (parentComponent.getMode() == ParentComponent.Mode.CHILD_KILL_PARENT) {
+                parentHealthComponent.setHealth(healthComponent.getHealth());
+            } else {
+                healthComponent.setHealth(parentHealthComponent.getHealth());
+            }
         }
     }
 }

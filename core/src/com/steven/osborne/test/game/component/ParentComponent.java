@@ -11,6 +11,11 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ParentComponent implements Component {
+    public enum Mode {
+        CHILD_KILL_PARENT,
+        PARENT_KILL_CHILD
+    }
     private Entity parent;
     private Vector2 relativePosition;
+    private Mode mode;
 }
