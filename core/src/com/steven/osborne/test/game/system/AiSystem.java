@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.steven.osborne.test.game.gameobject.component.AiComponent;
-import com.steven.osborne.test.game.gameobject.component.InputComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
-import com.steven.osborne.test.game.gameobject.component.VelocityComponent;
+import com.steven.osborne.test.game.component.AiComponent;
+import com.steven.osborne.test.game.component.InputComponent;
+import com.steven.osborne.test.game.component.PositionComponent;
+import com.steven.osborne.test.game.component.VelocityComponent;
 
 public class AiSystem extends IteratingSystem {
 

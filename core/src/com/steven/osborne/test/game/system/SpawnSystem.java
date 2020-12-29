@@ -7,7 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.steven.osborne.test.game.gameobject.component.SpawnComponent;
+import com.steven.osborne.test.game.component.SpawnComponent;
 
 public class SpawnSystem extends IteratingSystem {
 

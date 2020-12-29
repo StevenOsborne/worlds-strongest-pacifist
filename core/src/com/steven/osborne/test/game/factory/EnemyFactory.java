@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.steven.osborne.test.game.gameobject.component.*;
+import com.steven.osborne.test.game.component.*;
 
 import java.util.Arrays;
 

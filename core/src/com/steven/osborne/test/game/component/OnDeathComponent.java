@@ -1,4 +1,4 @@
-package com.steven.osborne.test.game.gameobject.component;
+package com.steven.osborne.test.game.component;
 
 import com.badlogic.ashley.core.Component;
 import com.steven.osborne.test.game.event.OnDeathEvent;

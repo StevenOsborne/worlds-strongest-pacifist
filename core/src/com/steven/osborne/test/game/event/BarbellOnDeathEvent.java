@@ -3,10 +3,10 @@ package com.steven.osborne.test.game.event;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Circle;
-import com.steven.osborne.test.game.gameobject.component.BoundsComponent;
-import com.steven.osborne.test.game.gameobject.component.CollisionComponent;
-import com.steven.osborne.test.game.gameobject.component.ExplosionComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
+import com.steven.osborne.test.game.component.BoundsComponent;
+import com.steven.osborne.test.game.component.CollisionComponent;
+import com.steven.osborne.test.game.component.ExplosionComponent;
+import com.steven.osborne.test.game.component.PositionComponent;
 
 import java.util.Arrays;
 

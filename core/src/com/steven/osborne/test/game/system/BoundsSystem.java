@@ -4,9 +4,9 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.steven.osborne.test.game.gameobject.component.BoundsComponent;
-import com.steven.osborne.test.game.gameobject.component.ExplosionComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
+import com.steven.osborne.test.game.component.BoundsComponent;
+import com.steven.osborne.test.game.component.ExplosionComponent;
+import com.steven.osborne.test.game.component.PositionComponent;
 
 public class BoundsSystem extends IteratingSystem {
 

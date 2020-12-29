@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
-import com.steven.osborne.test.game.gameobject.component.*;
+import com.steven.osborne.test.game.component.*;
 
 public class CollisionSystem extends IteratingSystem {
 

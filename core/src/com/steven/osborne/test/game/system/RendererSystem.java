@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.steven.osborne.test.game.gameobject.component.BoundsComponent;
-import com.steven.osborne.test.game.gameobject.component.ExplosionComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
-import com.steven.osborne.test.game.gameobject.component.SpriteComponent;
+import com.steven.osborne.test.game.component.BoundsComponent;
+import com.steven.osborne.test.game.component.ExplosionComponent;
+import com.steven.osborne.test.game.component.PositionComponent;
+import com.steven.osborne.test.game.component.SpriteComponent;
 
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
 

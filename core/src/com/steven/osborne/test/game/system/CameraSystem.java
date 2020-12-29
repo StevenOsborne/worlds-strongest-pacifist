@@ -5,8 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.steven.osborne.test.game.gameobject.component.CameraFollowComponent;
-import com.steven.osborne.test.game.gameobject.component.PositionComponent;
+import com.steven.osborne.test.game.component.CameraFollowComponent;
+import com.steven.osborne.test.game.component.PositionComponent;
 
 public class CameraSystem extends IteratingSystem {
     private static final float CAMERA_FRAME_SIZE_HORIZONTAL = 5f;

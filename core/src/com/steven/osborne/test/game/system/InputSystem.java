@@ -3,15 +3,15 @@ package com.steven.osborne.test.game.system;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.steven.osborne.test.game.gameobject.component.InputComponent;
-import com.steven.osborne.test.game.gameobject.component.VelocityComponent;
+import com.steven.osborne.test.game.component.InputComponent;
+import com.steven.osborne.test.game.component.VelocityComponent;
 import com.steven.osborne.test.game.input.ActionListener;
 import com.steven.osborne.test.game.input.ControllerListener;
 import com.steven.osborne.test.game.input.InputAction;
 import org.libsdl.SDL;
 
-import static com.steven.osborne.test.game.gameobject.component.InputComponent.CONTROLLER_DEAD_ZONE;
-import static com.steven.osborne.test.game.gameobject.component.VelocityComponent.PLAYER_SPEED;
+import static com.steven.osborne.test.game.component.InputComponent.CONTROLLER_DEAD_ZONE;
+import static com.steven.osborne.test.game.component.VelocityComponent.PLAYER_SPEED;
 
 public class InputSystem extends EntitySystem implements ActionListener, ControllerListener {
 
