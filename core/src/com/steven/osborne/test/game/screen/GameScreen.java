@@ -111,8 +111,8 @@ public class GameScreen extends ScreenAdapter {
                 .delay(5f)
                 .amountIncrement(1)
                 .delayDecrement(0.5f)
-                .minimumDelay(2f)
-                .maximumAmount(10)
+                .minimumDelay(1f)
+                .maximumAmount(20)
                 .spawnAreas(Arrays.asList(new Rectangle(-31.5f, 7.5f, 10f, 10f),
                         new Rectangle(21.5f, 7.5f, 10f, 10f),
                         new Rectangle(-31.5f, -17.5f, 10f, 10f),
@@ -126,7 +126,7 @@ public class GameScreen extends ScreenAdapter {
                 .delay(5f)
                 .amountIncrement(0)
                 .delayDecrement(0.5f)
-                .minimumDelay(2f)
+                .minimumDelay(1f)
                 .maximumAmount(1)
                 .spawnAreas(Collections.singletonList(new Rectangle(-31f, -17f, 62f, 34f)))
                 .build());
