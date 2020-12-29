@@ -23,6 +23,7 @@ public class BarbellFactory implements EntityFactory {
         barbellMiddle.add(CollisionComponent.builder().tag("Barbell").isStatic(false).collideTags(Arrays.asList("Wall")).build());
         barbellMiddle.add(HealthComponent.builder().health(1).build());
 
+        BarbellOnDeathEvent barbellOnDeathEvent = new BarbellOnDeathEvent();
         Entity barbellLeft = new Entity();
         Texture barbellEndTexture = new Texture("barbell_end.png");
         barbellLeft.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
@@ -30,7 +31,7 @@ public class BarbellFactory implements EntityFactory {
         barbellLeft.add(PositionComponent.builder().x(position.x).y(position.y).build());
         barbellLeft.add(BoundsComponent.builder().rectangle(new Rectangle(position.x, position.y, 0.75f, 0.5f)).build());
         barbellLeft.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall")).build());
-        barbellLeft.add(OnDeathComponent.builder().onDeathEvent(new BarbellOnDeathEvent()).build());
+        barbellLeft.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
         barbellLeft.add(ParentComponent.builder().parent(barbellMiddle).relativePosition(new Vector2(-0.75f, -0.125f)).build());
         barbellLeft.add(HealthComponent.builder().health(1).build());
 
@@ -40,7 +41,7 @@ public class BarbellFactory implements EntityFactory {
         barbellRight.add(PositionComponent.builder().x(position.x).y(position.y).build());
         barbellRight.add(BoundsComponent.builder().rectangle(new Rectangle(position.x, position.y, 0.75f, 0.5f)).build());
         barbellRight.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall")).build());
-        barbellRight.add(OnDeathComponent.builder().onDeathEvent(new BarbellOnDeathEvent()).build());
+        barbellRight.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
         barbellRight.add(ParentComponent.builder().parent(barbellMiddle).relativePosition(new Vector2(4f, -0.125f)).build());
         barbellRight.add(HealthComponent.builder().health(1).build());
 

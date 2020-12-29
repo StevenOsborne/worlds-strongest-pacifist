@@ -8,8 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class VelocityComponent implements Component {
-    public static final float PLAYER_SPEED = 20;
-    private float x;
-    private float y;
+public class LifetimeComponent implements Component {
+    private float lifetime;
+    private float timePassed;
 }

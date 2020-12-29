@@ -14,6 +14,7 @@ public class AiSystem extends IteratingSystem {
 
     private ComponentMapper<VelocityComponent> velocityComponentMapper = ComponentMapper.getFor(VelocityComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
+    private ComponentMapper<AiComponent> aiComponentMapper = ComponentMapper.getFor(AiComponent.class);
 
     private Entity player;//TODO - Should this be passed into the AiComponent?
 
@@ -33,13 +34,28 @@ public class AiSystem extends IteratingSystem {
         VelocityComponent velocityComponent = velocityComponentMapper.get(entity);
         PositionComponent positionComponent = positionComponentMapper.get(entity);
         PositionComponent playerPositionComponent = positionComponentMapper.get(player);
+        AiComponent aiComponent = aiComponentMapper.get(entity);
 
-        float diffX = playerPositionComponent.getX() - positionComponent.getX();
-        float diffY = playerPositionComponent.getY() - positionComponent.getY();
+        boolean followPlayer = true;
 
-        float angle = (float)Math.atan2(diffY, diffX);
+        if (aiComponent.getRange() != null) {
+            aiComponent.getRange().x = positionComponent.getX();
+            aiComponent.getRange().y = positionComponent.getY();
+            followPlayer = aiComponent.getRange().contains(playerPositionComponent.getX(), playerPositionComponent.getY());
+        }
 
-        velocityComponent.setX((float)(VelocityComponent.ENEMY_SPEED * Math.cos(angle)));
-        velocityComponent.setY((float)(VelocityComponent.ENEMY_SPEED * Math.sin(angle)));
+        if (followPlayer) {
+
+            float diffX = playerPositionComponent.getX() - positionComponent.getX();
+            float diffY = playerPositionComponent.getY() - positionComponent.getY();
+
+            float angle = (float) Math.atan2(diffY, diffX);
+
+            velocityComponent.setX((float) (aiComponent.getSpeed() * Math.cos(angle)));
+            velocityComponent.setY((float) (aiComponent.getSpeed() * Math.sin(angle)));
+        } else {
+            velocityComponent.setX(Math.max(0f, velocityComponent.getX() - 1f));
+            velocityComponent.setY(Math.max(0f, velocityComponent.getX() - 1f));
+        }
     }
 }

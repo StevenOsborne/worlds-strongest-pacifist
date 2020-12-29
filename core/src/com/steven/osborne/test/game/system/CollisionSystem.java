@@ -43,15 +43,17 @@ public class CollisionSystem extends IteratingSystem {
                     CollisionComponent collisionComponent1 = collisionComponentMapper.get(collisionEntity);
                     if (boundsComponent.getRectangle() != null && boundsComponent1.getRectangle() != null) { //Rectangle, Rectangle
                         if (boundsComponent.getRectangle().overlaps(boundsComponent1.getRectangle())) {
+                            System.out.println("Rectangle, Rectangle collision");
                             resolveCollision(collisionEntity, collisionComponent, positionComponent, boundsComponent, boundsComponent1, collisionComponent1);
                         }
                     } else if (boundsComponent.getCircle() != null && boundsComponent1.getRectangle() != null) { //Circle, Rectangle
                         if (Intersector.overlaps(boundsComponent.getCircle(), boundsComponent1.getRectangle())) {
+                            System.out.println("Circle, Rectangle collision");
                             resolveCollision(collisionEntity, collisionComponent, positionComponent, boundsComponent, boundsComponent1, collisionComponent1);
                         }
                     } else if (boundsComponent.getCircle() != null && boundsComponent1.getCircle() != null) {//Circle, Circle
                         if (Intersector.overlaps(boundsComponent.getCircle(), boundsComponent1.getCircle())) {
-                            System.out.println("Circle, circle collision");
+                            System.out.println("Circle, Circle collision");
                         }
                     }
                 }

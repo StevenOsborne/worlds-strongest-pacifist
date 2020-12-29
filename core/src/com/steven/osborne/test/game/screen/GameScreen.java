@@ -62,6 +62,7 @@ public class GameScreen extends ScreenAdapter {
         AiSystem aiSystem = new AiSystem();
         ExplosionSystem explosionSystem = new ExplosionSystem();
         ParentSystem parentSystem = new ParentSystem();
+        LifetimeSystem lifetimeSystem = new LifetimeSystem();
         engine.addSystem(movementSystem);
         engine.addSystem(parentSystem);
         engine.addSystem(cameraSystem);
@@ -72,6 +73,7 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(aiSystem);
         engine.addSystem(explosionSystem);
         engine.addSystem(deathSystem);
+        engine.addSystem(lifetimeSystem);
         engine.addSystem(renderer);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
@@ -86,7 +88,7 @@ public class GameScreen extends ScreenAdapter {
         player.add(BoundsComponent.builder().rectangle(new Rectangle(0f, 0f, 1, 1)).build());
         player.add(InputComponent.builder().build());
         player.add(CameraFollowComponent.builder().build());
-        player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell")).build());
+        player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
         engine.addEntity(player);
     }

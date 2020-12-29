@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.steven.osborne.test.game.component.*;
+import com.steven.osborne.test.game.event.EnemyOnDeathEvent;
 
 import java.util.Arrays;
 
@@ -21,7 +22,8 @@ public class EnemyFactory implements EntityFactory {
         enemy.add(BoundsComponent.builder().rectangle(new Rectangle(position.x, position.y, 1, 1)).build());
         enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall", "Enemy")).build());
         enemy.add(HealthComponent.builder().health(1).build());
-        enemy.add(AiComponent.builder().build());
+        enemy.add(AiComponent.builder().speed(10f).build());
+        enemy.add(OnDeathComponent.builder().onDeathEvent(new EnemyOnDeathEvent()).build());
 
         engine.addEntity(enemy);
     }
