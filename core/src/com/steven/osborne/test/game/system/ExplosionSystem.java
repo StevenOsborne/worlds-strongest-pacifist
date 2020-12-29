@@ -18,7 +18,7 @@ public class ExplosionSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         ExplosionComponent explosionComponent = explosionComponentMapper.get(entity);
 
-        explosionComponent.setRadius(Math.min(explosionComponent.getRadius() + (20 * deltaTime), explosionComponent.getMaximumRadius()));
+        explosionComponent.setRadius(Math.min(explosionComponent.getRadius() + (50 * deltaTime), explosionComponent.getMaximumRadius()));
 
         if (explosionComponent.getRadius() >= explosionComponent.getMaximumRadius()) {
             getEngine().removeEntity(entity);

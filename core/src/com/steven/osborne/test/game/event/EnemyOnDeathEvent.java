@@ -22,7 +22,7 @@ public class EnemyOnDeathEvent implements OnDeathEvent {
         multiplier.add(BoundsComponent.builder().rectangle(new Rectangle(positionComponent.getX(), positionComponent.getY(), 0.20f, 0.3f)).build());
         multiplier.add(CollisionComponent.builder().tag("Multiplier").isStatic(false).collideTags(Arrays.asList("Wall")).build());
         multiplier.add(HealthComponent.builder().health(1).build());
-        multiplier.add(LifetimeComponent.builder().lifetime(10f).build());
+        multiplier.add(LifetimeComponent.builder().lifetime(5f).build());
         multiplier.add(AiComponent.builder().speed(25f).range(new Circle(positionComponent.getX(), positionComponent.getY(), 5f)).build());
 
         engine.addEntity(multiplier);

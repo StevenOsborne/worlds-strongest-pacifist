@@ -16,7 +16,7 @@ import com.steven.osborne.test.game.component.SpriteComponent;
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
 
 public class RendererSystem extends EntitySystem {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final float HORIZONTAL_BOUNDARY = 18f;
     private static final float VERTICAL_BOUNDARY = 32f;
 
