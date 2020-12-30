@@ -2,7 +2,6 @@ package com.steven.osborne.test.game.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector2;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +15,5 @@ public class ParentComponent implements Component {
         PARENT_KILL_CHILD
     }
     private Entity parent;
-    private Vector2 relativePosition;
     private Mode mode;
 }

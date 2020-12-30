@@ -73,17 +73,17 @@ public class GameScreen extends ScreenAdapter {
         PhysicsDebugSystem physicsDebugSystem = new PhysicsDebugSystem(world, camera);
         engine.addSystem(renderer);
         engine.addSystem(physicsDebugSystem);
-        engine.addSystem(movementSystem);
-        engine.addSystem(collisionSystem);
-//        engine.addSystem(parentSystem);
+        engine.addSystem(physicsSystem);
         engine.addSystem(inputSystem);
+        engine.addSystem(parentSystem);
+        engine.addSystem(collisionSystem);
+        engine.addSystem(deathSystem);
+        engine.addSystem(movementSystem);
         engine.addSystem(boundsSystem);
         engine.addSystem(spawnSystem);
         engine.addSystem(aiSystem);
-        engine.addSystem(physicsSystem);
         engine.addSystem(cameraSystem);
         engine.addSystem(explosionSystem);
-        engine.addSystem(deathSystem);
         engine.addSystem(lifetimeSystem);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
@@ -110,9 +110,7 @@ public class GameScreen extends ScreenAdapter {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = box;
-        fixtureDef.density = 0f;
         fixtureDef.friction = 0.0f;
-        fixtureDef.restitution = 0.0f;
 
         Body body = world.createBody(bodyDef);
         body.createFixture(fixtureDef);
@@ -125,22 +123,13 @@ public class GameScreen extends ScreenAdapter {
         box.dispose();
 
         player.add(bodyComponent);
-
-        Entity playerInset = new Entity();
-        playerInset.add(PositionComponent.builder().x(0f).y(0f).build());
-        playerInset.add(BoundsComponent.builder().rectangle(new Rectangle(0f, 0f, 0.5f, 0.5f)).build());
-        playerInset.add(CollisionComponent.builder().tag("PlayerInset").isStatic(false).build());
-        playerInset.add(ParentComponent.builder().parent(player).relativePosition(new Vector2(0.25f, 0.25f)).mode(ParentComponent.Mode.CHILD_KILL_PARENT).build());
-        playerInset.add(HealthComponent.builder().health(1).build());
-
         engine.addEntity(player);
-        engine.addEntity(playerInset);
     }
 
     private void createSpawners() {
         Entity enemySpawner = new Entity();
         enemySpawner.add(SpawnComponent.builder()
-                .factory(new EnemyFactory())
+                .factory(new EnemyFactory(world))
                 .amount(5)
                 .delay(5f)
                 .amountIncrement(1)
@@ -165,7 +154,7 @@ public class GameScreen extends ScreenAdapter {
                 .spawnAreas(Collections.singletonList(new Rectangle(-31f, -17f, 62f, 34f)))
                 .build());
 
-//        engine.addEntity(enemySpawner);
+        engine.addEntity(enemySpawner);
         engine.addEntity(barbellSpawner);
     }
 

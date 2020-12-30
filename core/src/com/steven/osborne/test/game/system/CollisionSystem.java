@@ -22,7 +22,11 @@ public class CollisionSystem extends IteratingSystem {
         Entity collidedEntity = collisionComponentA.getCollidingWith();
         if (collidedEntity != null) {
             CollisionComponent collisionComponentB = collisionComponentMapper.get(collidedEntity);
+            if (collisionComponentA.getTag().equals("PlayerInset") || collisionComponentB.getTag().equals("PlayerInset")) {
+                System.out.println("HERE");
+            }
             resolveCollision(collidedEntity, collisionComponentA, collisionComponentB);
+            collisionComponentA.setCollidingWith(null);
         }
     }
 
