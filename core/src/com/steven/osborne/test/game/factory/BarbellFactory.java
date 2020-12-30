@@ -5,12 +5,19 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.steven.osborne.test.game.component.*;
 import com.steven.osborne.test.game.event.BarbellOnDeathEvent;
 
 import java.util.Arrays;
 
 public class BarbellFactory implements EntityFactory {
+
+    private World world;
+
+    public BarbellFactory(World world) {
+        this.world = world;
+    }
 
     @Override
     public void create(Engine engine, Vector2 position) {
@@ -22,6 +29,7 @@ public class BarbellFactory implements EntityFactory {
         barbellMiddle.add(BoundsComponent.builder().rectangle(new Rectangle(position.x, position.y, 4, 0.25f)).build());
         barbellMiddle.add(CollisionComponent.builder().tag("Barbell").isStatic(false).collideTags(Arrays.asList("Wall")).build());
         barbellMiddle.add(HealthComponent.builder().health(1).build());
+        barbellMiddle.add(BodyComponent.builder().body(createBody(position, 2f, 0.125f, barbellMiddle)).build());
 
         BarbellOnDeathEvent barbellOnDeathEvent = new BarbellOnDeathEvent();
         Entity barbellLeft = new Entity();
@@ -32,8 +40,8 @@ public class BarbellFactory implements EntityFactory {
         barbellLeft.add(BoundsComponent.builder().rectangle(new Rectangle(position.x, position.y, 0.75f, 0.5f)).build());
         barbellLeft.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("PlayerInset")).collideTags(Arrays.asList("Wall")).build());
         barbellLeft.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
-        barbellLeft.add(ParentComponent.builder().parent(barbellMiddle).relativePosition(new Vector2(-0.75f, -0.125f)).build());
         barbellLeft.add(HealthComponent.builder().health(1).build());
+//        barbellLeft.add(BodyComponent.builder().body(createBody(position, 0.375f, 0.25f)).build());
 
         Entity barbellRight = new Entity();
         barbellRight.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
@@ -42,11 +50,34 @@ public class BarbellFactory implements EntityFactory {
         barbellRight.add(BoundsComponent.builder().rectangle(new Rectangle(position.x, position.y, 0.75f, 0.5f)).build());
         barbellRight.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("PlayerInset")).collideTags(Arrays.asList("Wall")).build());
         barbellRight.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
-        barbellRight.add(ParentComponent.builder().parent(barbellMiddle).relativePosition(new Vector2(4f, -0.125f)).build());
         barbellRight.add(HealthComponent.builder().health(1).build());
 
         engine.addEntity(barbellMiddle);
-        engine.addEntity(barbellLeft);
-        engine.addEntity(barbellRight);
+//        engine.addEntity(barbellLeft);
+//        engine.addEntity(barbellRight);
+    }
+
+    private Body createBody(Vector2 position, float halfX, float halfY, Entity entity) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.position.set(position.x, position.y);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(halfX, halfY);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = box;
+        fixtureDef.density = 0f;
+        fixtureDef.friction = 0.0f;
+        fixtureDef.restitution = 0.0f;
+        fixtureDef.isSensor = true;
+
+        Body body = world.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setUserData(entity);
+
+        box.dispose();
+
+        return body;
     }
 }
