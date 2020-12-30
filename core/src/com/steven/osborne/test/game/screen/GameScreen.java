@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.steven.osborne.test.game.TestGame;
@@ -29,6 +30,7 @@ public class GameScreen extends ScreenAdapter {
     private Engine engine;
     private OrthographicCamera camera;
     private Viewport viewport;
+    private World world;
 
     private InputActionManager inputActionManager;
     private ControllerActionManager controllerActionManager;
@@ -39,6 +41,7 @@ public class GameScreen extends ScreenAdapter {
         engine = new Engine();
         camera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        world = new World(new Vector2(0f, 0f), true);
 
         initialiseEntities();
         initialiseSystems();
@@ -64,18 +67,22 @@ public class GameScreen extends ScreenAdapter {
         ExplosionSystem explosionSystem = new ExplosionSystem();
         ParentSystem parentSystem = new ParentSystem();
         LifetimeSystem lifetimeSystem = new LifetimeSystem();
+        PhysicsSystem physicsSystem = new PhysicsSystem(world);
+        PhysicsDebugSystem physicsDebugSystem = new PhysicsDebugSystem(world, camera);
+        engine.addSystem(renderer);
+        engine.addSystem(physicsDebugSystem);
         engine.addSystem(movementSystem);
-        engine.addSystem(collisionSystem);
+//        engine.addSystem(collisionSystem);
         engine.addSystem(parentSystem);
-        engine.addSystem(cameraSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(boundsSystem);
         engine.addSystem(spawnSystem);
         engine.addSystem(aiSystem);
+        engine.addSystem(physicsSystem);
+        engine.addSystem(cameraSystem);
         engine.addSystem(explosionSystem);
         engine.addSystem(deathSystem);
         engine.addSystem(lifetimeSystem);
-        engine.addSystem(renderer);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);
     }
@@ -91,6 +98,30 @@ public class GameScreen extends ScreenAdapter {
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(0f, 0f);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(0.5f, 0.5f);
+
+//        FixtureDef fixtureDef = new FixtureDef();
+//        fixtureDef.shape = box;
+//        fixtureDef.density = 20f;
+//        fixtureDef.friction = 0.4f;
+//        fixtureDef.restitution = 0.6f;
+
+        Body body = world.createBody(bodyDef);
+        body.createFixture(box, 0.0f);
+
+        BodyComponent bodyComponent = BodyComponent.builder()
+                .body(body)
+                .build();
+
+        box.dispose();
+
+        player.add(bodyComponent);
 
         Entity playerInset = new Entity();
         playerInset.add(PositionComponent.builder().x(0f).y(0f).build());
@@ -131,8 +162,8 @@ public class GameScreen extends ScreenAdapter {
                 .spawnAreas(Collections.singletonList(new Rectangle(-31f, -17f, 62f, 34f)))
                 .build());
 
-        engine.addEntity(enemySpawner);
-        engine.addEntity(barbellSpawner);
+//        engine.addEntity(enemySpawner);
+//        engine.addEntity(barbellSpawner);
     }
 
     private void createBoundary() {
@@ -140,26 +171,42 @@ public class GameScreen extends ScreenAdapter {
         leftWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
         leftWall.add(BoundsComponent.builder().rectangle(new Rectangle(-33f, -19f, 1f, 38f)).build());
         leftWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
+        leftWall.add(BodyComponent.builder().body(createBody(new Vector2(-33f, 0f), 1f, 18f)).build());
 
         Entity rightWall = new Entity();
         rightWall.add(PositionComponent.builder().x(32f).y(-19f).build());
         rightWall.add(BoundsComponent.builder().rectangle(new Rectangle(32f, -19f, 1f, 38f)).build());
         rightWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
+        rightWall.add(BodyComponent.builder().body(createBody(new Vector2(33f, 0f), 1f, 18f)).build());
 
         Entity topWall = new Entity();
         topWall.add(PositionComponent.builder().x(-33f).y(18f).build());
         topWall.add(BoundsComponent.builder().rectangle(new Rectangle(-33f, 18f, 66f, 1f)).build());
         topWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
+        topWall.add(BodyComponent.builder().body(createBody(new Vector2(0f, 19f), 32f, 1f)).build());
 
         Entity bottomWall = new Entity();
         bottomWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
         bottomWall.add(BoundsComponent.builder().rectangle(new Rectangle(-33f, -19f, 66f, 1f)).build());
         bottomWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
+        bottomWall.add(BodyComponent.builder().body(createBody(new Vector2(0f, -19f), 32f, 1f)).build());
 
         engine.addEntity(leftWall);
         engine.addEntity(rightWall);
         engine.addEntity(topWall);
         engine.addEntity(bottomWall);
+    }
+
+    private Body createBody(Vector2 position, float halfX, float halfY) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(position);
+        Body body = world.createBody(bodyDef);
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(halfX, halfY);
+        body.createFixture(box, 0.0f);
+        box.dispose();
+
+        return body;
     }
 
     @Override

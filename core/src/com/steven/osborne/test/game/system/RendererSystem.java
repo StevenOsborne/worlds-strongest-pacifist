@@ -60,12 +60,15 @@ public class RendererSystem extends EntitySystem {
             SpriteComponent texture = textureComponentMapper.get(entity);
             PositionComponent position = positionComponentMapper.get(entity);
 
+            float width = texture.getTexture().getWidth() * PIXELS_TO_METERS;
+            float height = texture.getTexture().getHeight() * PIXELS_TO_METERS;
+
             if (texture.isVisible()) {
                 batch.draw(texture.getTexture(),
-                        position.getX(),
-                        position.getY(),
-                        texture.getTexture().getWidth() * PIXELS_TO_METERS,
-                        texture.getTexture().getHeight() * PIXELS_TO_METERS);
+                        position.getX() - (width / 2),
+                        position.getY() - (height / 2),
+                        width,
+                        height);
             }
         }
         batch.end();

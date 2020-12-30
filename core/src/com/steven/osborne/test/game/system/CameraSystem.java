@@ -27,7 +27,6 @@ public class CameraSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent position = positionComponentMapper.get(entity);
 
-
 //        camera.position.set(position.getX(), position.getY(), 0); //Camera just follows player
 
         camera.position.x = Math.min(Math.max(camera.position.x, position.getX() - CAMERA_FRAME_SIZE_HORIZONTAL), position.getX() + CAMERA_FRAME_SIZE_HORIZONTAL); //TODO - This is cool, but not right at all
