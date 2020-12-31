@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.steven.osborne.test.game.component.BoundsComponent;
 import com.steven.osborne.test.game.component.ExplosionComponent;
 import com.steven.osborne.test.game.component.PositionComponent;
 import com.steven.osborne.test.game.component.SpriteComponent;
@@ -16,7 +15,6 @@ import com.steven.osborne.test.game.component.SpriteComponent;
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
 
 public class RendererSystem extends EntitySystem {
-    private static final boolean DEBUG = false;
     private static final float HORIZONTAL_BOUNDARY = 18f;
     private static final float VERTICAL_BOUNDARY = 32f;
 
@@ -26,7 +24,6 @@ public class RendererSystem extends EntitySystem {
 
     private ComponentMapper<SpriteComponent> textureComponentMapper = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<BoundsComponent> boundsComponentMapper = ComponentMapper.getFor(BoundsComponent.class);
     private ComponentMapper<ExplosionComponent> explosionComponentMapper = ComponentMapper.getFor(ExplosionComponent.class);
 
     private SpriteBatch batch;
@@ -43,10 +40,6 @@ public class RendererSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
         explosions = engine.getEntitiesFor(Family.all(ExplosionComponent.class, PositionComponent.class).get());
-
-        if (DEBUG) {
-            debugEntities = engine.getEntitiesFor(Family.all(BoundsComponent.class).get());
-        }
     }
 
     public void update(float deltaTime) {
@@ -75,10 +68,6 @@ public class RendererSystem extends EntitySystem {
 
         renderBoundary();
         renderExplosions();
-
-        if (DEBUG) {
-            renderDebugEntities();
-        }
     }
 
     private void renderBoundary() {
@@ -97,20 +86,6 @@ public class RendererSystem extends EntitySystem {
             PositionComponent positionComponent = positionComponentMapper.get(entity);
             ExplosionComponent explosionComponent = explosionComponentMapper.get(entity);
             shapeRenderer.circle(positionComponent.getX(), positionComponent.getY(), explosionComponent.getRadius(), 30);
-        }
-        shapeRenderer.end();
-    }
-
-    private void renderDebugEntities() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 0, 0, 1);
-        for (Entity entity : debugEntities) {
-            BoundsComponent bounds = boundsComponentMapper.get(entity);
-            if (bounds.getRectangle() != null) {
-                shapeRenderer.rect(bounds.getRectangle().getX(), bounds.getRectangle().getY(), bounds.getRectangle().getWidth(), bounds.getRectangle().getHeight());
-            } else if (bounds.getCircle() != null) {
-                shapeRenderer.circle(bounds.getCircle().x, bounds.getCircle().y, bounds.getCircle().radius);
-            }
         }
         shapeRenderer.end();
     }

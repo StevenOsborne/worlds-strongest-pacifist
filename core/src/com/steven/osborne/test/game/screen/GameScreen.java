@@ -61,7 +61,6 @@ public class GameScreen extends ScreenAdapter {
         MovementSystem movementSystem = new MovementSystem();
         CameraSystem cameraSystem = new CameraSystem(camera);
         InputSystem inputSystem = new InputSystem();
-        BoundsSystem boundsSystem = new BoundsSystem();
         CollisionSystem collisionSystem = new CollisionSystem();
         DeathSystem deathSystem = new DeathSystem(world);
         SpawnSystem spawnSystem = new SpawnSystem();
@@ -80,7 +79,6 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(collisionSystem);
         engine.addSystem(deathSystem);
         engine.addSystem(movementSystem);
-        engine.addSystem(boundsSystem);
         engine.addSystem(spawnSystem);
         engine.addSystem(aiSystem);
         engine.addSystem(cameraSystem);
@@ -95,7 +93,6 @@ public class GameScreen extends ScreenAdapter {
         player.add(SpriteComponent.builder().texture(playerTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         player.add(PositionComponent.builder().x(0f).y(0f).build());
         player.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
-        player.add(BoundsComponent.builder().rectangle(new Rectangle(0f, 0f, 1, 1)).build());
         player.add(InputComponent.builder().build());
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
@@ -161,25 +158,21 @@ public class GameScreen extends ScreenAdapter {
     private void createBoundary() {
         Entity leftWall = new Entity();
         leftWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
-        leftWall.add(BoundsComponent.builder().rectangle(new Rectangle(-33f, -19f, 1f, 38f)).build());
         leftWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
         leftWall.add(BodyComponent.builder().body(createBody(new Vector2(-33f, 0f), 1f, 18f, leftWall)).build());
 
         Entity rightWall = new Entity();
         rightWall.add(PositionComponent.builder().x(32f).y(-19f).build());
-        rightWall.add(BoundsComponent.builder().rectangle(new Rectangle(32f, -19f, 1f, 38f)).build());
         rightWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
         rightWall.add(BodyComponent.builder().body(createBody(new Vector2(33f, 0f), 1f, 18f, rightWall)).build());
 
         Entity topWall = new Entity();
         topWall.add(PositionComponent.builder().x(-33f).y(18f).build());
-        topWall.add(BoundsComponent.builder().rectangle(new Rectangle(-33f, 18f, 66f, 1f)).build());
         topWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
         topWall.add(BodyComponent.builder().body(createBody(new Vector2(0f, 19f), 32f, 1f, topWall)).build());
 
         Entity bottomWall = new Entity();
         bottomWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
-        bottomWall.add(BoundsComponent.builder().rectangle(new Rectangle(-33f, -19f, 66f, 1f)).build());
         bottomWall.add(CollisionComponent.builder().isStatic(true).tag("Wall").build());
         bottomWall.add(BodyComponent.builder().body(createBody(new Vector2(0f, -19f), 32f, 1f, bottomWall)).build());
 
