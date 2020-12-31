@@ -66,16 +66,17 @@ public class GameScreen extends ScreenAdapter {
         DeathSystem deathSystem = new DeathSystem(world);
         SpawnSystem spawnSystem = new SpawnSystem();
         AiSystem aiSystem = new AiSystem();
-        ExplosionSystem explosionSystem = new ExplosionSystem();
+        ExplosionSystem explosionSystem = new ExplosionSystem(world);
         ParentSystem parentSystem = new ParentSystem();
         LifetimeSystem lifetimeSystem = new LifetimeSystem();
         PhysicsSystem physicsSystem = new PhysicsSystem(world);
         PhysicsDebugSystem physicsDebugSystem = new PhysicsDebugSystem(world, camera);
         engine.addSystem(renderer);
-        engine.addSystem(physicsDebugSystem);
+//        engine.addSystem(physicsDebugSystem);
         engine.addSystem(physicsSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(parentSystem);
+        engine.addSystem(explosionSystem);
         engine.addSystem(collisionSystem);
         engine.addSystem(deathSystem);
         engine.addSystem(movementSystem);
@@ -83,7 +84,6 @@ public class GameScreen extends ScreenAdapter {
         engine.addSystem(spawnSystem);
         engine.addSystem(aiSystem);
         engine.addSystem(cameraSystem);
-        engine.addSystem(explosionSystem);
         engine.addSystem(lifetimeSystem);
         inputActionManager.subscribe(inputSystem);
         controllerActionManager.subscribe(inputSystem);

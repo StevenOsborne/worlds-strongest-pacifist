@@ -14,9 +14,11 @@ import java.util.Arrays;
 public class BarbellFactory implements EntityFactory {
 
     private World world;
+    private BarbellOnDeathEvent barbellOnDeathEvent;
 
     public BarbellFactory(World world) {
         this.world = world;
+        barbellOnDeathEvent = new BarbellOnDeathEvent(world);
     }
 
     @Override
@@ -31,7 +33,6 @@ public class BarbellFactory implements EntityFactory {
         barbellMiddle.add(HealthComponent.builder().health(1).build());
         barbellMiddle.add(BodyComponent.builder().body(createBody(position, 2f, 0.125f, barbellMiddle)).build());
 
-        BarbellOnDeathEvent barbellOnDeathEvent = new BarbellOnDeathEvent();
         Entity barbellLeft = new Entity();
         Texture barbellEndTexture = new Texture("barbell_end.png");
         barbellLeft.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures

@@ -18,9 +18,9 @@ public class CollisionListener implements ContactListener {
         Entity entityB = (Entity)bodyB.getUserData();
 
         CollisionComponent collisionComponentA = collisionComponentMapper.get(entityA);
-        collisionComponentA.setCollidingWith(entityB);
+        collisionComponentA.getCollidingWith().add(entityB);
         CollisionComponent collisionComponentB = collisionComponentMapper.get(entityB);
-        collisionComponentB.setCollidingWith(entityA);
+        collisionComponentB.getCollidingWith().add(entityA);
     }
 
     @Override
