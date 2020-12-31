@@ -17,7 +17,7 @@ public class BarbellFactory implements EntityFactory {
 
     public BarbellFactory(World world) {
         this.world = world;
-        barbellOnDeathEvent = new BarbellOnDeathEvent(world);
+        barbellOnDeathEvent = new BarbellOnDeathEvent();
     }
 
     @Override

@@ -4,11 +4,19 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.steven.osborne.test.game.component.*;
 
 import java.util.Arrays;
 
 public class EnemyOnDeathEvent implements OnDeathEvent {
+
+    private World world;
+
+    public EnemyOnDeathEvent(World world) {
+        this.world = world;
+    }
 
     @Override
     public void execute(Engine engine, Entity entity) {
@@ -22,7 +30,31 @@ public class EnemyOnDeathEvent implements OnDeathEvent {
         multiplier.add(HealthComponent.builder().health(1).build());
         multiplier.add(LifetimeComponent.builder().lifetime(5f).build());
         multiplier.add(AiComponent.builder().speed(25f).range(new Circle(positionComponent.getX(), positionComponent.getY(), 5f)).build());
+        multiplier.add(BodyComponent.builder().body(createBody(new Vector2(positionComponent.getX(), positionComponent.getY()),0.1f, 0.15f, multiplier)).build());
 
         engine.addEntity(multiplier);
+    }
+
+    private Body createBody(Vector2 position, float halfX, float halfY, Entity entity) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(position.x, position.y);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(halfX, halfY);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = box;
+        fixtureDef.density = 0f;
+        fixtureDef.friction = 0.0f;
+        fixtureDef.restitution = 0.0f;
+
+        Body body = world.createBody(bodyDef);
+        body.createFixture(fixtureDef);
+        body.setUserData(entity);
+
+        box.dispose();
+
+        return body;
     }
 }
