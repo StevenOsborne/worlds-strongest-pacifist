@@ -29,7 +29,7 @@ public class BarbellFactory implements EntityFactory {
         barbellMiddle.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
         barbellMiddle.add(CollisionComponent.builder().tag("Barbell").isStatic(false).collideTags(Arrays.asList("Wall")).build());
         barbellMiddle.add(HealthComponent.builder().health(1).build());
-        barbellMiddle.add(BodyComponent.builder().body(createBody(position, 2f, 0.125f, barbellMiddle)).build());
+        barbellMiddle.add(BodyComponent.builder().body(createBody(position, 3f, 0.125f, barbellMiddle)).build());
 
         Entity barbellLeft = new Entity();
         Texture barbellEndTexture = new Texture("barbell_end.png");
@@ -40,7 +40,7 @@ public class BarbellFactory implements EntityFactory {
         barbellLeft.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
         barbellLeft.add(HealthComponent.builder().health(1).build());
         barbellLeft.add(ParentComponent.builder().parent(barbellMiddle).build());
-        barbellLeft.add(BodyComponent.builder().body(createBody(new Vector2(position.x -2.375f, position.y), 0.375f, 0.25f, barbellLeft)).build());
+        barbellLeft.add(BodyComponent.builder().body(createBody(new Vector2(position.x -3.375f, position.y), 0.375f, 0.25f, barbellLeft)).build());
 
         Entity barbellRight = new Entity();
         barbellRight.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
@@ -50,7 +50,7 @@ public class BarbellFactory implements EntityFactory {
         barbellRight.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
         barbellRight.add(HealthComponent.builder().health(1).build());
         barbellRight.add(ParentComponent.builder().parent(barbellMiddle).build());
-        barbellRight.add(BodyComponent.builder().body(createBody(new Vector2(position.x + 2.375f, position.y), 0.375f, 0.25f, barbellRight)).build());
+        barbellRight.add(BodyComponent.builder().body(createBody(new Vector2(position.x + 3.375f, position.y), 0.375f, 0.25f, barbellRight)).build());
 
         engine.addEntity(barbellMiddle);
         engine.addEntity(barbellLeft);
