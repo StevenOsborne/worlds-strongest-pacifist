@@ -48,6 +48,7 @@ public class EnemyOnDeathEvent implements OnDeathEvent {
         fixtureDef.density = 0f;
         fixtureDef.friction = 0.0f;
         fixtureDef.restitution = 0.0f;
+        fixtureDef.isSensor = true;
 
         Body body = world.createBody(bodyDef);
         body.createFixture(fixtureDef);
