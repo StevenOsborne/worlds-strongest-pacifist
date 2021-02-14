@@ -38,7 +38,20 @@ public class InputActionManager extends InputAdapter {
 
         if (action != null) {
             for (ActionListener actionListener : actionListeners) {
-                if (actionListener.onAction(action)) {
+                if (actionListener.onActionDown(action)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    @Override
+    public boolean keyUp(int keycode) {
+        InputAction action = keyboardMappings.get(keycode);
+
+        if (action != null) {
+            for (ActionListener actionListener : actionListeners) {
+                if (actionListener.onActionUp(action)) {
                     return true;
                 }
             }

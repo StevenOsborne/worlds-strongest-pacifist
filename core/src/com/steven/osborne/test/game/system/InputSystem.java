@@ -28,28 +28,41 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
     }
 
     @Override
-    public boolean onAction(InputAction action) {
-
+    public boolean onActionDown(InputAction action) {
         for (Entity entity : entities) {
-            VelocityComponent velocity = velocityComponentMapper.get(entity);//TODO - This keyboard movement needs a lot of work
+            VelocityComponent velocity = velocityComponentMapper.get(entity);
 
             if (action == InputAction.UP) {
-                velocity.setY(100f);
-                velocity.setX(0.0f);
+                velocity.setY(PLAYER_SPEED);
             } else if (action == InputAction.DOWN) {
-                velocity.setY(-100f);
-                velocity.setX(0.0f);
+                velocity.setY(-PLAYER_SPEED);
             } else if (action == InputAction.LEFT) {
-                velocity.setY(0.0f);
-                velocity.setX(-100f);
+                velocity.setX(-PLAYER_SPEED);
             } else if (action == InputAction.RIGHT) {
-                velocity.setY(0.0f);
-                velocity.setX(100f);
+                velocity.setX(PLAYER_SPEED);
             }
         }
 
         if (action == InputAction.MENU) {
             Gdx.app.exit();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onActionUp(InputAction action) {
+        for (Entity entity : entities) {
+            VelocityComponent velocity = velocityComponentMapper.get(entity);
+
+            if (action == InputAction.UP) {
+                velocity.setY(0f);
+            } else if (action == InputAction.DOWN) {
+                velocity.setY(0f);
+            } else if (action == InputAction.LEFT) {
+                velocity.setX(0f);
+            } else if (action == InputAction.RIGHT) {
+                velocity.setX(0f);
+            }
         }
         return true;
     }
