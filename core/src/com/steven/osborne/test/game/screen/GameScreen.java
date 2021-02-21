@@ -30,6 +30,7 @@ public class GameScreen extends ScreenAdapter {
 
     private Engine engine;
     private OrthographicCamera camera;
+    private OrthographicCamera guiCamera;
     private Viewport viewport;
     private World world;
 
@@ -41,6 +42,7 @@ public class GameScreen extends ScreenAdapter {
         controllerActionManager = new ControllerActionManager();
         engine = new Engine();
         camera = new OrthographicCamera();
+        guiCamera = new OrthographicCamera();
         viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         world = new World(new Vector2(0f, 0f), true);
         world.setContactListener(new CollisionListener());
@@ -56,7 +58,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void initialiseSystems() {
-        RendererSystem renderer = new RendererSystem(camera);
+        RendererSystem renderer = new RendererSystem(camera, guiCamera);
         renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
         MovementSystem movementSystem = new MovementSystem();
         CameraSystem cameraSystem = new CameraSystem(camera);
@@ -70,13 +72,15 @@ public class GameScreen extends ScreenAdapter {
         LifetimeSystem lifetimeSystem = new LifetimeSystem();
         PhysicsSystem physicsSystem = new PhysicsSystem(world);
         PhysicsDebugSystem physicsDebugSystem = new PhysicsDebugSystem(world, camera);
+        ScoreSystem scoreSystem = new ScoreSystem();
         engine.addSystem(renderer);
-//        engine.addSystem(physicsDebugSystem);
+        engine.addSystem(physicsDebugSystem);
         engine.addSystem(physicsSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(parentSystem);
         engine.addSystem(explosionSystem);
         engine.addSystem(collisionSystem);
+        engine.addSystem(scoreSystem);
         engine.addSystem(deathSystem);
         engine.addSystem(movementSystem);
         engine.addSystem(spawnSystem);
@@ -97,6 +101,7 @@ public class GameScreen extends ScreenAdapter {
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
+        player.add(ScoreComponent.builder().score(0L).multiplier(1L).build());
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -198,10 +203,12 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         engine.update(delta);
+//        Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
     }
 
     @Override
     public void resize (int width, int height) {
         viewport.update(width, height);
+        guiCamera.setToOrtho(false, width, height);
     }
 }

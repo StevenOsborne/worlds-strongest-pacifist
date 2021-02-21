@@ -31,7 +31,13 @@ public class EnemyOnDeathEvent implements OnDeathEvent {
         multiplier.add(LifetimeComponent.builder().lifetime(5f).build());
         multiplier.add(AiComponent.builder().speed(25f).range(new Circle(positionComponent.getX(), positionComponent.getY(), 5f)).build());
         multiplier.add(BodyComponent.builder().body(createBody(new Vector2(positionComponent.getX(), positionComponent.getY()),0.1f, 0.15f, multiplier)).build());
+        multiplier.add(OnDeathComponent.builder().onDeathEvent(new MultiplierOnDeathEvent()).build());
 
+        Entity points = new Entity();
+        points.add(PointsComponent.builder().basePoints(10).build());
+        points.add(HealthComponent.builder().health(0).build());
+
+        engine.addEntity(points);
         engine.addEntity(multiplier);
     }
 

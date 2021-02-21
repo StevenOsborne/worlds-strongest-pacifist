@@ -5,11 +5,14 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.steven.osborne.test.game.component.ExplosionComponent;
 import com.steven.osborne.test.game.component.PositionComponent;
+import com.steven.osborne.test.game.component.ScoreComponent;
 import com.steven.osborne.test.game.component.SpriteComponent;
 
 import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
@@ -21,29 +24,43 @@ public class RendererSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> debugEntities;
     private ImmutableArray<Entity> explosions;
+    private Entity scoreEntity;
+    private ScoreComponent scoreComponent;
 
     private ComponentMapper<SpriteComponent> textureComponentMapper = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<ExplosionComponent> explosionComponentMapper = ComponentMapper.getFor(ExplosionComponent.class);
+    private ComponentMapper<ScoreComponent> scoreComponentMapper = ComponentMapper.getFor(ScoreComponent.class);
 
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
-    private OrthographicCamera camera; //TODO - Should this be passed in?
+    private BitmapFont font;
+    private OrthographicCamera camera;
+    private OrthographicCamera guiCamera;
     private Vector3 backgroundColour = new Vector3(0,0,0);
 
-    public RendererSystem(OrthographicCamera camera) {
+    public RendererSystem(OrthographicCamera camera, OrthographicCamera guiCamera) {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         this.camera = camera;
+        this.guiCamera = guiCamera;
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Bold.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 28;
+        font = generator.generateFont(parameter);
+        generator.dispose();
     }
 
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
         explosions = engine.getEntitiesFor(Family.all(ExplosionComponent.class, PositionComponent.class).get());
+        scoreEntity = engine.getEntitiesFor(Family.one(ScoreComponent.class).get()).first();
+        scoreComponent = scoreComponentMapper.get(scoreEntity);
     }
 
     public void update(float deltaTime) {
-        Gdx.gl.glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z, 1);//TODO - Should background be an image?
+        Gdx.gl.glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
@@ -68,6 +85,15 @@ public class RendererSystem extends EntitySystem {
 
         renderBoundary();
         renderExplosions();
+        renderGui();
+    }
+
+    private void renderGui() {
+        batch.setProjectionMatrix(guiCamera.combined);
+
+        batch.begin();
+        font.draw(batch, String.format("Score: %d    | Multiplier: %d", scoreComponent.getScore(), scoreComponent.getMultiplier()), 950, 980);
+        batch.end();
     }
 
     private void renderBoundary() {
