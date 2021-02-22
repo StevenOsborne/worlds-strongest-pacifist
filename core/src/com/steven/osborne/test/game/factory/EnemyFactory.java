@@ -12,10 +12,12 @@ import java.util.Arrays;
 
 public class EnemyFactory implements EntityFactory {
 
-    private World world;
+    private final World world;
+    private final EnemyOnDeathEvent enemyOnDeathEvent;
 
     public EnemyFactory(World world) {
         this.world = world;
+        enemyOnDeathEvent = new EnemyOnDeathEvent(world);
     }
 
     @Override
@@ -28,7 +30,7 @@ public class EnemyFactory implements EntityFactory {
         enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall", "Enemy")).build());
         enemy.add(HealthComponent.builder().health(1).build());
         enemy.add(AiComponent.builder().speed(10f).build());
-        enemy.add(OnDeathComponent.builder().onDeathEvent(new EnemyOnDeathEvent(world)).build());
+        enemy.add(OnDeathComponent.builder().onDeathEvent(enemyOnDeathEvent).build());
         enemy.add(BodyComponent.builder().body(createBody(position, 0.5f, 0.5f, enemy)).build());
 
         engine.addEntity(enemy);
