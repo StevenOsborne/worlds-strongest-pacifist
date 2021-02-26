@@ -10,13 +10,12 @@ import com.steven.osborne.test.game.input.ControllerListener;
 import com.steven.osborne.test.game.input.InputAction;
 import org.libsdl.SDL;
 
-import static com.steven.osborne.test.game.component.InputComponent.CONTROLLER_DEAD_ZONE;
-
 public class InputSystem extends EntitySystem implements ActionListener, ControllerListener {
 
     private ImmutableArray<Entity> entities;
 
     private ComponentMapper<VelocityComponent> velocityComponentMapper = ComponentMapper.getFor(VelocityComponent.class);
+    private ComponentMapper<InputComponent> inputComponentMapper = ComponentMapper.getFor(InputComponent.class);
 
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(InputComponent.class, VelocityComponent.class).get());
@@ -69,11 +68,13 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
     @Override
     public boolean onControllerInput(int axisIndex, float value) {
         if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX || axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
-            if (value < CONTROLLER_DEAD_ZONE && value > -CONTROLLER_DEAD_ZONE) {
-                value = 0f;
-            }
             for (Entity entity : entities) {
+                InputComponent inputComponent = inputComponentMapper.get(entity);
                 VelocityComponent velocity = velocityComponentMapper.get(entity);
+                if (value < inputComponent.getControllerDeadZone() && value > -inputComponent.getControllerDeadZone()) {
+                    value = 0f;
+                }
+
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX) {
                     velocity.velocity.x = value * velocity.speed;
                 }

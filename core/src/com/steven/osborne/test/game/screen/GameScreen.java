@@ -97,7 +97,7 @@ public class GameScreen extends ScreenAdapter {
         player.add(SpriteComponent.builder().texture(playerTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         player.add(PositionComponent.builder().x(0f).y(0f).build());
         player.add(VelocityComponent.builder().speed(20f).velocity(new Vector2()).build());
-        player.add(InputComponent.builder().build());
+        player.add(InputComponent.builder().controllerDeadZone(0.2f).build());
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
