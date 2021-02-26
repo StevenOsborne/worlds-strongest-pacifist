@@ -19,6 +19,6 @@ public class MovementSystem extends IteratingSystem {
         BodyComponent bodyComponent = bodyComponentMapper.get(entity);
         VelocityComponent velocity = velocityComponentMapper.get(entity);
 
-        bodyComponent.getBody().setLinearVelocity(velocity.getX(), velocity.getY());
+        bodyComponent.getBody().setLinearVelocity(velocity.velocity);
     }
 }

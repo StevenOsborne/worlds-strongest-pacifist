@@ -51,11 +51,11 @@ public class AiSystem extends IteratingSystem {
 
             float angle = (float) Math.atan2(diffY, diffX);
 
-            velocityComponent.setX((float) (aiComponent.getSpeed() * Math.cos(angle)));
-            velocityComponent.setY((float) (aiComponent.getSpeed() * Math.sin(angle)));
+            velocityComponent.velocity.x = ((float) (aiComponent.getSpeed() * Math.cos(angle)));
+            velocityComponent.velocity.y = ((float) (aiComponent.getSpeed() * Math.sin(angle)));
         } else {
-            velocityComponent.setX(Math.max(0f, velocityComponent.getX() - 1f));
-            velocityComponent.setY(Math.max(0f, velocityComponent.getX() - 1f));
+            velocityComponent.velocity.x = (Math.max(0f, velocityComponent.velocity.x - 1f));
+            velocityComponent.velocity.y = (Math.max(0f, velocityComponent.velocity.y - 1f));
         }
     }
 }

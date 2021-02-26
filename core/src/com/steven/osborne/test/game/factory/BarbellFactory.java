@@ -26,7 +26,7 @@ public class BarbellFactory implements EntityFactory {
         Texture barbellMiddleTexture = new Texture("sprites/barbell_middle.png");
         barbellMiddle.add(SpriteComponent.builder().texture(barbellMiddleTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         barbellMiddle.add(PositionComponent.builder().x(position.x).y(position.y).build());
-        barbellMiddle.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        barbellMiddle.add(VelocityComponent.builder().velocity(new Vector2()).build());
         barbellMiddle.add(CollisionComponent.builder().tag("Barbell").isStatic(false).build());
         barbellMiddle.add(HealthComponent.builder().health(1).build());
         barbellMiddle.add(BodyComponent.builder().body(createBody(position, 3f, 0.125f, barbellMiddle)).build());
@@ -34,7 +34,7 @@ public class BarbellFactory implements EntityFactory {
         Entity barbellLeft = new Entity();
         Texture barbellEndTexture = new Texture("sprites/barbell_end.png");
         barbellLeft.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
-        barbellLeft.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        barbellLeft.add(VelocityComponent.builder().velocity(new Vector2()).build());
         barbellLeft.add(PositionComponent.builder().x(position.x).y(position.y).build());
         barbellLeft.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).build());
         barbellLeft.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
@@ -44,7 +44,7 @@ public class BarbellFactory implements EntityFactory {
 
         Entity barbellRight = new Entity();
         barbellRight.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
-        barbellRight.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        barbellRight.add(VelocityComponent.builder().velocity(new Vector2()).build());
         barbellRight.add(PositionComponent.builder().x(position.x).y(position.y).build());
         barbellRight.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).build());
         barbellRight.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());

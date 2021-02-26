@@ -33,13 +33,13 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             VelocityComponent velocity = velocityComponentMapper.get(entity);
 
             if (action == InputAction.UP) {
-                velocity.setY(PLAYER_SPEED);
+                velocity.velocity.y = PLAYER_SPEED;
             } else if (action == InputAction.DOWN) {
-                velocity.setY(-PLAYER_SPEED);
+                velocity.velocity.y = -PLAYER_SPEED;
             } else if (action == InputAction.LEFT) {
-                velocity.setX(-PLAYER_SPEED);
+                velocity.velocity.x = -PLAYER_SPEED;
             } else if (action == InputAction.RIGHT) {
-                velocity.setX(PLAYER_SPEED);
+                velocity.velocity.x = PLAYER_SPEED;
             }
         }
 
@@ -55,13 +55,13 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             VelocityComponent velocity = velocityComponentMapper.get(entity);
 
             if (action == InputAction.UP) {
-                velocity.setY(0f);
+                velocity.velocity.y = 0f;
             } else if (action == InputAction.DOWN) {
-                velocity.setY(0f);
+                velocity.velocity.y = 0f;
             } else if (action == InputAction.LEFT) {
-                velocity.setX(0f);
+                velocity.velocity.x = 0f;
             } else if (action == InputAction.RIGHT) {
-                velocity.setX(0f);
+                velocity.velocity.x = 0f;
             }
         }
         return true;
@@ -76,10 +76,10 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             for (Entity entity : entities) {
                 VelocityComponent velocity = velocityComponentMapper.get(entity);
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX) {
-                    velocity.setX(value * PLAYER_SPEED);
+                    velocity.velocity.x = value * PLAYER_SPEED;
                 }
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
-                    velocity.setY(-value * PLAYER_SPEED);
+                    velocity.velocity.y = -value * PLAYER_SPEED;
                 }
             }
             return true;

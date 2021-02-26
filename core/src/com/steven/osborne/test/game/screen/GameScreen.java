@@ -96,7 +96,7 @@ public class GameScreen extends ScreenAdapter {
         Texture playerTexture = new Texture("sprites/player.png");
         player.add(SpriteComponent.builder().texture(playerTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         player.add(PositionComponent.builder().x(0f).y(0f).build());
-        player.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        player.add(VelocityComponent.builder().velocity(new Vector2()).build());
         player.add(InputComponent.builder().build());
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
@@ -159,7 +159,7 @@ public class GameScreen extends ScreenAdapter {
                 .build());
 
         engine.addEntity(enemySpawner);
-//        engine.addEntity(barbellSpawner);
+        engine.addEntity(barbellSpawner);
     }
 
     private void createBoundary() {

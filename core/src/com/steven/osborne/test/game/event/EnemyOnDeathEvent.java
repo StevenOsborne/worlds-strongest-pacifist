@@ -25,7 +25,7 @@ public class EnemyOnDeathEvent implements OnDeathEvent {
         Texture multiplierTexture = new Texture("sprites/multiplier.png");
         multiplier.add(SpriteComponent.builder().texture(multiplierTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         multiplier.add(PositionComponent.builder().x(positionComponent.getX()).y(positionComponent.getY()).build());
-        multiplier.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
+        multiplier.add(VelocityComponent.builder().velocity(new Vector2()).build());
         multiplier.add(CollisionComponent.builder().tag("Multiplier").isStatic(false).build());
         multiplier.add(HealthComponent.builder().health(1).build());
         multiplier.add(LifetimeComponent.builder().lifetime(5f).build());
