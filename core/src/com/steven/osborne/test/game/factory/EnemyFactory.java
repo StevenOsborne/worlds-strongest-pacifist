@@ -23,11 +23,11 @@ public class EnemyFactory implements EntityFactory {
     @Override
     public void create(Engine engine, Vector2 position) {
         Entity enemy = new Entity();
-        Texture enemyTexture = new Texture("enemy.png");
+        Texture enemyTexture = new Texture("sprites/enemy.png");
         enemy.add(SpriteComponent.builder().texture(enemyTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         enemy.add(PositionComponent.builder().x(position.x).y(position.y).build());
         enemy.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
-        enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall", "Enemy")).build());
+        enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).destroyTags(Arrays.asList("Player")).build());
         enemy.add(HealthComponent.builder().health(1).build());
         enemy.add(AiComponent.builder().speed(10f).build());
         enemy.add(OnDeathComponent.builder().onDeathEvent(enemyOnDeathEvent).build());
@@ -48,7 +48,7 @@ public class EnemyFactory implements EntityFactory {
         fixtureDef.shape = box;
         fixtureDef.density = 0f;
         fixtureDef.friction = 0.0f;
-        fixtureDef.restitution = 0.0f;
+        fixtureDef.restitution = -10f;
 
         Body body = world.createBody(bodyDef);
         body.createFixture(fixtureDef);

@@ -23,20 +23,20 @@ public class BarbellFactory implements EntityFactory {
     @Override
     public void create(Engine engine, Vector2 position) {
         Entity barbellMiddle = new Entity();
-        Texture barbellMiddleTexture = new Texture("barbell_middle.png");
+        Texture barbellMiddleTexture = new Texture("sprites/barbell_middle.png");
         barbellMiddle.add(SpriteComponent.builder().texture(barbellMiddleTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         barbellMiddle.add(PositionComponent.builder().x(position.x).y(position.y).build());
         barbellMiddle.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
-        barbellMiddle.add(CollisionComponent.builder().tag("Barbell").isStatic(false).collideTags(Arrays.asList("Wall")).build());
+        barbellMiddle.add(CollisionComponent.builder().tag("Barbell").isStatic(false).build());
         barbellMiddle.add(HealthComponent.builder().health(1).build());
         barbellMiddle.add(BodyComponent.builder().body(createBody(position, 3f, 0.125f, barbellMiddle)).build());
 
         Entity barbellLeft = new Entity();
-        Texture barbellEndTexture = new Texture("barbell_end.png");
+        Texture barbellEndTexture = new Texture("sprites/barbell_end.png");
         barbellLeft.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         barbellLeft.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
         barbellLeft.add(PositionComponent.builder().x(position.x).y(position.y).build());
-        barbellLeft.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall")).build());
+        barbellLeft.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).build());
         barbellLeft.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
         barbellLeft.add(HealthComponent.builder().health(1).build());
         barbellLeft.add(ParentComponent.builder().parent(barbellMiddle).build());
@@ -46,7 +46,7 @@ public class BarbellFactory implements EntityFactory {
         barbellRight.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         barbellRight.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
         barbellRight.add(PositionComponent.builder().x(position.x).y(position.y).build());
-        barbellRight.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).collideTags(Arrays.asList("Wall")).build());
+        barbellRight.add(CollisionComponent.builder().tag("BarbellEnd").isStatic(false).destroyTags(Arrays.asList("Player")).build());
         barbellRight.add(OnDeathComponent.builder().onDeathEvent(barbellOnDeathEvent).build());
         barbellRight.add(HealthComponent.builder().health(1).build());
         barbellRight.add(ParentComponent.builder().parent(barbellMiddle).build());

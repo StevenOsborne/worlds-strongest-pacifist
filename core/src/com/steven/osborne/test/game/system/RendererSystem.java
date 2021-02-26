@@ -3,6 +3,7 @@ package com.steven.osborne.test.game.system;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,7 +23,6 @@ public class RendererSystem extends EntitySystem {
     private static final float VERTICAL_BOUNDARY = 32f;
 
     private ImmutableArray<Entity> entities;
-    private ImmutableArray<Entity> debugEntities;
     private ImmutableArray<Entity> explosions;
     private Entity scoreEntity;
     private ScoreComponent scoreComponent;
@@ -45,9 +45,13 @@ public class RendererSystem extends EntitySystem {
         this.camera = camera;
         this.guiCamera = guiCamera;
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Bold.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.color = new Color(0, 1, 0.2f, 1);
         parameter.size = 28;
+        parameter.borderColor = Color.WHITE;
+        parameter.borderWidth = 2f;
+        parameter.borderGamma = 0.5f;
         font = generator.generateFont(parameter);
         generator.dispose();
     }
@@ -63,6 +67,13 @@ public class RendererSystem extends EntitySystem {
         Gdx.gl.glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        renderEntities();
+        renderBoundary();
+        renderExplosions();
+        renderGui();
+    }
+
+    private void renderEntities() {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -82,17 +93,13 @@ public class RendererSystem extends EntitySystem {
             }
         }
         batch.end();
-
-        renderBoundary();
-        renderExplosions();
-        renderGui();
     }
 
     private void renderGui() {
         batch.setProjectionMatrix(guiCamera.combined);
 
         batch.begin();
-        font.draw(batch, String.format("Score: %d    | Multiplier: %d", scoreComponent.getScore(), scoreComponent.getMultiplier()), 950, 980);
+        font.draw(batch, String.format("Score: %d    | Multiplier: %d", scoreComponent.getScore(), scoreComponent.getMultiplier()), 2560f / 2f, 1440 - 200);
         batch.end();
     }
 

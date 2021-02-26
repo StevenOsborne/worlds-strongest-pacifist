@@ -18,7 +18,7 @@ public class BarbellOnDeathEvent implements OnDeathEvent {
     public void execute(Engine engine, Entity entity) {
         PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
         Entity explosion = new Entity();
-        explosion.add(ExplosionComponent.builder().radius(1f).maximumRadius(6f).build());
+        explosion.add(ExplosionComponent.builder().radius(1f).maximumRadius(8f).build());
         explosion.add(PositionComponent.builder().x(positionComponent.getX()).y(positionComponent.getY()).build());
         explosion.add(CollisionComponent.builder().tag("Explosion").isStatic(false).destroyTags(Arrays.asList("Enemy")).build());
         explosion.add(HealthComponent.builder().health(1).build());

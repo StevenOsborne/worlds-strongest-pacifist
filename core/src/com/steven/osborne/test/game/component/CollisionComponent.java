@@ -18,7 +18,6 @@ public class CollisionComponent implements Component {
     private String tag;
     private List<String> destroyTags;
     private List<Entity> collidingWith;
-    private List<String> collideTags;
 
     public List<String> getDestroyTags() {
         return destroyTags != null ? destroyTags : Collections.emptyList();

@@ -74,7 +74,7 @@ public class GameScreen extends ScreenAdapter {
         PhysicsDebugSystem physicsDebugSystem = new PhysicsDebugSystem(world, camera);
         ScoreSystem scoreSystem = new ScoreSystem();
         engine.addSystem(renderer);
-        engine.addSystem(physicsDebugSystem);
+//        engine.addSystem(physicsDebugSystem);
         engine.addSystem(physicsSystem);
         engine.addSystem(inputSystem);
         engine.addSystem(parentSystem);
@@ -93,13 +93,13 @@ public class GameScreen extends ScreenAdapter {
 
     private void createPlayer() {
         Entity player = new Entity();
-        Texture playerTexture = new Texture("player.png");
+        Texture playerTexture = new Texture("sprites/player.png");
         player.add(SpriteComponent.builder().texture(playerTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         player.add(PositionComponent.builder().x(0f).y(0f).build());
         player.add(VelocityComponent.builder().x(0.0f).y(0.0f).build());
         player.add(InputComponent.builder().build());
         player.add(CameraFollowComponent.builder().build());
-        player.add(CollisionComponent.builder().tag("Player").isStatic(false).collideTags(Arrays.asList("Wall")).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
+        player.add(CollisionComponent.builder().tag("Player").isStatic(false).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
         player.add(ScoreComponent.builder().score(0L).multiplier(1L).build());
 
@@ -129,13 +129,15 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void createSpawners() {
+        float delay = 5f;
+        float delayDecrement = 0.1f;
         Entity enemySpawner = new Entity();
         enemySpawner.add(SpawnComponent.builder()
                 .factory(new EnemyFactory(world))
                 .amount(5)
-                .delay(5f)
+                .delay(delay)
                 .amountIncrement(1)
-                .delayDecrement(0.5f)
+                .delayDecrement(delayDecrement)
                 .minimumDelay(1f)
                 .maximumAmount(20)
                 .spawnAreas(Arrays.asList(new Rectangle(-31.5f, 7.5f, 10f, 10f),
@@ -148,16 +150,16 @@ public class GameScreen extends ScreenAdapter {
         barbellSpawner.add(SpawnComponent.builder()
                 .factory(new BarbellFactory(world))
                 .amount(1)
-                .delay(5f)
+                .delay(delay)
                 .amountIncrement(0)
-                .delayDecrement(0.5f)
+                .delayDecrement(delayDecrement)
                 .minimumDelay(1f)
                 .maximumAmount(1)
                 .spawnAreas(Collections.singletonList(new Rectangle(-31f, -17f, 62f, 34f)))
                 .build());
 
         engine.addEntity(enemySpawner);
-        engine.addEntity(barbellSpawner);
+//        engine.addEntity(barbellSpawner);
     }
 
     private void createBoundary() {

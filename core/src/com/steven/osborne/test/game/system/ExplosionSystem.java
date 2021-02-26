@@ -58,7 +58,7 @@ public class ExplosionSystem extends IteratingSystem {
 
         }
 
-        explosionComponent.setRadius(Math.min(explosionComponent.getRadius() + (50 * deltaTime), explosionComponent.getMaximumRadius()));
+        explosionComponent.setRadius(Math.min(explosionComponent.getRadius() + (100 * deltaTime), explosionComponent.getMaximumRadius()));
 
         if (explosionComponent.getRadius() >= explosionComponent.getMaximumRadius()) {
             healthComponent.setHealth(0);
