@@ -140,10 +140,10 @@ public class GameScreen extends ScreenAdapter {
                 .delayDecrement(delayDecrement)
                 .minimumDelay(1f)
                 .maximumAmount(20)
-                .spawnAreas(Arrays.asList(new Rectangle(-31.5f, 7.5f, 10f, 10f),
-                        new Rectangle(21.5f, 7.5f, 10f, 10f),
-                        new Rectangle(-31.5f, -17.5f, 10f, 10f),
-                        new Rectangle(21.5f, -17.5f, 10f, 10f)))
+                .spawnAreas(Arrays.asList(new Rectangle(-32.5f, 12f, 5f, 5f),//TOP LEFT
+                        new Rectangle(26f, 12f, 5f, 5f), //TOP RIGHT
+                        new Rectangle(-32.5f, -17.5f, 5f, 5f), //BOTTOM LEFT
+                        new Rectangle(26f, -17.5f, 5f, 5f))) //BOTTOM RIGHT
                 .build());
 
         Entity barbellSpawner = new Entity();
