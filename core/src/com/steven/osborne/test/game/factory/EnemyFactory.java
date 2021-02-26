@@ -26,10 +26,10 @@ public class EnemyFactory implements EntityFactory {
         Texture enemyTexture = new Texture("sprites/enemy.png");
         enemy.add(SpriteComponent.builder().texture(enemyTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         enemy.add(PositionComponent.builder().x(position.x).y(position.y).build());
-        enemy.add(VelocityComponent.builder().velocity(new Vector2()).build());
+        enemy.add(VelocityComponent.builder().speed(10f).velocity(new Vector2()).build());
         enemy.add(CollisionComponent.builder().tag("Enemy").isStatic(false).destroyTags(Arrays.asList("Player")).build());
         enemy.add(HealthComponent.builder().health(1).build());
-        enemy.add(AiComponent.builder().speed(10f).build());
+        enemy.add(AiComponent.builder().build());
         enemy.add(OnDeathComponent.builder().onDeathEvent(enemyOnDeathEvent).build());
         enemy.add(BodyComponent.builder().body(createBody(position, 0.5f, 0.5f, enemy)).build());
 

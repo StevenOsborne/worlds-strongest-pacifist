@@ -11,7 +11,6 @@ import com.steven.osborne.test.game.input.InputAction;
 import org.libsdl.SDL;
 
 import static com.steven.osborne.test.game.component.InputComponent.CONTROLLER_DEAD_ZONE;
-import static com.steven.osborne.test.game.component.VelocityComponent.PLAYER_SPEED;
 
 public class InputSystem extends EntitySystem implements ActionListener, ControllerListener {
 
@@ -33,13 +32,13 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             VelocityComponent velocity = velocityComponentMapper.get(entity);
 
             if (action == InputAction.UP) {
-                velocity.velocity.y = PLAYER_SPEED;
+                velocity.velocity.y = velocity.speed;
             } else if (action == InputAction.DOWN) {
-                velocity.velocity.y = -PLAYER_SPEED;
+                velocity.velocity.y = -velocity.speed;
             } else if (action == InputAction.LEFT) {
-                velocity.velocity.x = -PLAYER_SPEED;
+                velocity.velocity.x = -velocity.speed;
             } else if (action == InputAction.RIGHT) {
-                velocity.velocity.x = PLAYER_SPEED;
+                velocity.velocity.x = velocity.speed;
             }
         }
 
@@ -76,10 +75,10 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
             for (Entity entity : entities) {
                 VelocityComponent velocity = velocityComponentMapper.get(entity);
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX) {
-                    velocity.velocity.x = value * PLAYER_SPEED;
+                    velocity.velocity.x = value * velocity.speed;
                 }
                 if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
-                    velocity.velocity.y = -value * PLAYER_SPEED;
+                    velocity.velocity.y = -value * velocity.speed;
                 }
             }
             return true;

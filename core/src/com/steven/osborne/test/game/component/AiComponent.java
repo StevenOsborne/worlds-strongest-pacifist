@@ -10,6 +10,5 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AiComponent implements Component {
-    private float speed;
     private Circle range;
 }

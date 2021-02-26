@@ -16,7 +16,7 @@ public class AiSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<AiComponent> aiComponentMapper = ComponentMapper.getFor(AiComponent.class);
 
-    private Entity player;//TODO - Should this be passed into the AiComponent?
+    private Entity player;
 
     public AiSystem() {
         super(Family.all(AiComponent.class, VelocityComponent.class, PositionComponent.class).get());
@@ -45,14 +45,13 @@ public class AiSystem extends IteratingSystem {
         }
 
         if (followPlayer) {
-
             float diffX = playerPositionComponent.getX() - positionComponent.getX();
             float diffY = playerPositionComponent.getY() - positionComponent.getY();
 
             float angle = (float) Math.atan2(diffY, diffX);
 
-            velocityComponent.velocity.x = ((float) (aiComponent.getSpeed() * Math.cos(angle)));
-            velocityComponent.velocity.y = ((float) (aiComponent.getSpeed() * Math.sin(angle)));
+            velocityComponent.velocity.x = ((float) (velocityComponent.speed * Math.cos(angle)));
+            velocityComponent.velocity.y = ((float) (velocityComponent.speed * Math.sin(angle)));
         } else {
             velocityComponent.velocity.x = (Math.max(0f, velocityComponent.velocity.x - 1f));
             velocityComponent.velocity.y = (Math.max(0f, velocityComponent.velocity.y - 1f));

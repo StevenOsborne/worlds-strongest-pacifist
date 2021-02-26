@@ -6,6 +6,6 @@ import lombok.Builder;
 
 @Builder
 public class VelocityComponent implements Component {
-    public static final float PLAYER_SPEED = 20;
+    public float speed;
     public Vector2 velocity;
 }
