@@ -16,7 +16,7 @@ import com.steven.osborne.test.game.component.PositionComponent;
 import com.steven.osborne.test.game.component.ScoreComponent;
 import com.steven.osborne.test.game.component.SpriteComponent;
 
-import static com.steven.osborne.test.game.screen.GameScreen.PIXELS_TO_METERS;
+import static com.steven.osborne.test.game.WorldsStrongestPacifist.PIXELS_TO_METERS;
 
 public class RendererSystem extends EntitySystem {
     private static final float HORIZONTAL_BOUNDARY = 18f;
@@ -59,8 +59,8 @@ public class RendererSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
         explosions = engine.getEntitiesFor(Family.all(ExplosionComponent.class, PositionComponent.class).get());
-        scoreEntity = engine.getEntitiesFor(Family.one(ScoreComponent.class).get()).first();
-        scoreComponent = scoreComponentMapper.get(scoreEntity);
+//        scoreEntity = engine.getEntitiesFor(Family.one(ScoreComponent.class).get()).first();
+//        scoreComponent = scoreComponentMapper.get(scoreEntity);
     }
 
     public void update(float deltaTime) {
@@ -70,7 +70,7 @@ public class RendererSystem extends EntitySystem {
         renderEntities();
         renderBoundary();
         renderExplosions();
-        renderGui();
+//        renderGui();
     }
 
     private void renderEntities() {

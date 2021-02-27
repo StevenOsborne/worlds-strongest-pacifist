@@ -66,7 +66,7 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
     }
 
     @Override
-    public boolean onControllerInput(int axisIndex, float value) {
+    public boolean onControllerAxisInput(int axisIndex, float value) {
         if (axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTX || axisIndex == SDL.SDL_CONTROLLER_AXIS_LEFTY) {
             for (Entity entity : entities) {
                 InputComponent inputComponent = inputComponentMapper.get(entity);
@@ -83,6 +83,14 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
                 }
             }
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onControllerButtonInput(int buttonIndex) {
+        if (buttonIndex == SDL.SDL_CONTROLLER_BUTTON_X) {
+            System.out.println("X");
         }
         return false;
     }
