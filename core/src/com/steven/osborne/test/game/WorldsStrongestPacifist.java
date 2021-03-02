@@ -10,6 +10,7 @@ import com.steven.osborne.test.game.input.ControllerActionManager;
 import com.steven.osborne.test.game.input.InputActionManager;
 import com.steven.osborne.test.game.screen.GameScreen;
 import com.steven.osborne.test.game.screen.MainMenuScreen;
+import com.steven.osborne.test.game.screen.Screen;
 import com.steven.osborne.test.game.screen.ScreenName;
 import com.steven.osborne.test.game.system.InputSystem;
 import com.steven.osborne.test.game.system.RendererSystem;
@@ -37,12 +38,10 @@ public class WorldsStrongestPacifist extends Game {
 		viewport.apply();
 		inputActionManager = new InputActionManager();
 		controllerActionManager = new ControllerActionManager();
-		gameScreen = new GameScreen(this, engine, viewport, guiCamera);
-		mainMenuScreen = new MainMenuScreen(this, engine);
 
 		initialiseSystems();
 
-		setScreen(mainMenuScreen);
+		switchScreen(ScreenName.MAIN_MENU);
 	}
 
 	@Override
@@ -55,20 +54,29 @@ public class WorldsStrongestPacifist extends Game {
 	}
 
 	public void switchScreen(ScreenName screenName) {
+		if (getScreen() != null) {
+			getScreen().dispose();
+		}
 		switch (screenName) {
 			case MAIN_MENU:
+				mainMenuScreen = new MainMenuScreen(this, engine);
 				setScreen(mainMenuScreen);
 				break;
 			case GAME:
+				gameScreen = new GameScreen(this, engine, viewport, guiCamera);
 				setScreen(gameScreen);
 				break;
 		}
 	}
 
+	public void resetScreen() {
+		((Screen) getScreen()).reset();
+	}
+
 	private void initialiseSystems() {
 		RendererSystem renderer = new RendererSystem((OrthographicCamera) viewport.getCamera(), guiCamera);
 		renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
-		InputSystem inputSystem = new InputSystem();
+		InputSystem inputSystem = new InputSystem(this);
 
 		engine.addSystem(renderer);
 		engine.addSystem(inputSystem);

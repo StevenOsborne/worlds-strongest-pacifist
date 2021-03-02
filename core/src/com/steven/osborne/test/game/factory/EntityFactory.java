@@ -5,4 +5,5 @@ import com.badlogic.gdx.math.Vector2;
 
 public interface EntityFactory {
     void create(Engine engine, Vector2 position);
+    void dispose();
 }

@@ -3,6 +3,7 @@ package com.steven.osborne.test.game.system;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.steven.osborne.test.game.WorldsStrongestPacifist;
 import com.steven.osborne.test.game.component.InputComponent;
 import com.steven.osborne.test.game.component.VelocityComponent;
 import com.steven.osborne.test.game.input.ActionListener;
@@ -16,6 +17,12 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
 
     private ComponentMapper<VelocityComponent> velocityComponentMapper = ComponentMapper.getFor(VelocityComponent.class);
     private ComponentMapper<InputComponent> inputComponentMapper = ComponentMapper.getFor(InputComponent.class);
+
+    private WorldsStrongestPacifist worldsStrongestPacifist;
+
+    public InputSystem(WorldsStrongestPacifist worldsStrongestPacifist) {
+        this.worldsStrongestPacifist = worldsStrongestPacifist;
+    }
 
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(InputComponent.class, VelocityComponent.class).get());
@@ -90,7 +97,7 @@ public class InputSystem extends EntitySystem implements ActionListener, Control
     @Override
     public boolean onControllerButtonInput(int buttonIndex) {
         if (buttonIndex == SDL.SDL_CONTROLLER_BUTTON_X) {
-            System.out.println("X");
+            worldsStrongestPacifist.resetScreen();
         }
         return false;
     }

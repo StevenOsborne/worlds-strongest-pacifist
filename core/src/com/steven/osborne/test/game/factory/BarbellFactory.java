@@ -12,18 +12,21 @@ import java.util.Arrays;
 
 public class BarbellFactory implements EntityFactory {
 
-    private World world;
-    private BarbellOnDeathEvent barbellOnDeathEvent;
+    private final World world;
+    private final BarbellOnDeathEvent barbellOnDeathEvent;
+    private final Texture barbellMiddleTexture;
+    private final Texture barbellEndTexture;
 
     public BarbellFactory(World world) {
         this.world = world;
         barbellOnDeathEvent = new BarbellOnDeathEvent();
+        barbellMiddleTexture = new Texture("sprites/barbell_middle.png");
+        barbellEndTexture = new Texture("sprites/barbell_end.png");
     }
 
     @Override
     public void create(Engine engine, Vector2 position) {
         Entity barbellMiddle = new Entity();
-        Texture barbellMiddleTexture = new Texture("sprites/barbell_middle.png");
         barbellMiddle.add(SpriteComponent.builder().texture(barbellMiddleTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         barbellMiddle.add(PositionComponent.builder().x(position.x).y(position.y).build());
         barbellMiddle.add(VelocityComponent.builder().velocity(new Vector2()).build());
@@ -32,7 +35,6 @@ public class BarbellFactory implements EntityFactory {
         barbellMiddle.add(BodyComponent.builder().body(createBody(position, 3f, 0.125f, barbellMiddle)).build());
 
         Entity barbellLeft = new Entity();
-        Texture barbellEndTexture = new Texture("sprites/barbell_end.png");
         barbellLeft.add(SpriteComponent.builder().texture(barbellEndTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         barbellLeft.add(VelocityComponent.builder().velocity(new Vector2()).build());
         barbellLeft.add(PositionComponent.builder().x(position.x).y(position.y).build());
@@ -55,6 +57,12 @@ public class BarbellFactory implements EntityFactory {
         engine.addEntity(barbellMiddle);
         engine.addEntity(barbellLeft);
         engine.addEntity(barbellRight);
+    }
+
+    @Override
+    public void dispose() {
+        barbellMiddleTexture.dispose();
+        barbellEndTexture.dispose();
     }
 
     private Body createBody(Vector2 position, float halfX, float halfY, Entity entity) {

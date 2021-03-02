@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.title = "World's strongest pacifist";
 		config.width = 2560;
 		config.height = 1440;
-		config.fullscreen = true;
+		config.fullscreen = false;
 
 		config.backgroundFPS = 144;
 		config.foregroundFPS = 144;

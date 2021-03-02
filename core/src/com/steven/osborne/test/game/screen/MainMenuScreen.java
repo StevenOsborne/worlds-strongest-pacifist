@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ScreenAdapter;
 import com.steven.osborne.test.game.WorldsStrongestPacifist;
 
-public class MainMenuScreen extends ScreenAdapter {
+public class MainMenuScreen extends ScreenAdapter implements Screen {
 
     private WorldsStrongestPacifist worldsStrongestPacifist;
     private Engine engine;
@@ -22,5 +22,10 @@ public class MainMenuScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 //        engine.update(delta);
+    }
+
+    @Override
+    public void reset() {
+        System.out.println("RESET MAIN MENU");
     }
 }
