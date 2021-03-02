@@ -14,16 +14,17 @@ public class EnemyFactory implements EntityFactory {
 
     private final World world;
     private final EnemyOnDeathEvent enemyOnDeathEvent;
+    private final Texture enemyTexture;
 
     public EnemyFactory(World world) {
         this.world = world;
         enemyOnDeathEvent = new EnemyOnDeathEvent(world);
+        enemyTexture = new Texture("sprites/enemy.png");
     }
 
     @Override
     public void create(Engine engine, Vector2 position) {
         Entity enemy = new Entity();
-        Texture enemyTexture = new Texture("sprites/enemy.png");
         enemy.add(SpriteComponent.builder().texture(enemyTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
         enemy.add(PositionComponent.builder().x(position.x).y(position.y).build());
         enemy.add(VelocityComponent.builder().speed(10f).velocity(new Vector2()).build());
@@ -35,6 +36,12 @@ public class EnemyFactory implements EntityFactory {
 
         engine.addEntity(enemy);
     }
+
+    @Override
+    public void dispose() {
+        enemyTexture.dispose();
+    }
+
 
     private Body createBody(Vector2 position, float halfX, float halfY, Entity entity) {
         BodyDef bodyDef = new BodyDef();

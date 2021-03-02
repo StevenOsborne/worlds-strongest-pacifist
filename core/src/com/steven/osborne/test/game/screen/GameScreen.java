@@ -2,50 +2,52 @@ package com.steven.osborne.test.game.screen;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.steven.osborne.test.game.TestGame;
-import com.steven.osborne.test.game.component.*;
+import com.steven.osborne.test.game.WorldsStrongestPacifist;
+import com.steven.osborne.test.game.component.BodyComponent;
+import com.steven.osborne.test.game.component.CollisionComponent;
+import com.steven.osborne.test.game.component.PositionComponent;
+import com.steven.osborne.test.game.component.SpawnComponent;
 import com.steven.osborne.test.game.factory.BarbellFactory;
 import com.steven.osborne.test.game.factory.EnemyFactory;
-import com.steven.osborne.test.game.input.ControllerActionManager;
-import com.steven.osborne.test.game.input.InputActionManager;
+import com.steven.osborne.test.game.factory.EntityFactory;
+import com.steven.osborne.test.game.factory.PlayerFactory;
 import com.steven.osborne.test.game.listener.CollisionListener;
 import com.steven.osborne.test.game.system.*;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-public class GameScreen extends ScreenAdapter {
-    public static final float PIXELS_TO_METERS = 1.0f / 32.0f;
-    public static final float VIRTUAL_WIDTH = 1920 * PIXELS_TO_METERS; //60.0
-    public static final float VIRTUAL_HEIGHT = 1080 * PIXELS_TO_METERS; //33.75
+public class GameScreen extends ScreenAdapter implements Screen {
 
+    private Array<EntitySystem> systems;
+    private Array<EntityFactory> factories;
     private Engine engine;
-    private OrthographicCamera camera;
     private OrthographicCamera guiCamera;
     private Viewport viewport;
     private World world;
+    private WorldsStrongestPacifist worldsStrongestPacifist;
 
-    private InputActionManager inputActionManager;
-    private ControllerActionManager controllerActionManager;
-
-    public GameScreen(TestGame testGame) {
-        inputActionManager = new InputActionManager();
-        controllerActionManager = new ControllerActionManager();
-        engine = new Engine();
-        camera = new OrthographicCamera();
-        guiCamera = new OrthographicCamera();
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+    public GameScreen(WorldsStrongestPacifist worldsStrongestPacifist, Engine engine, Viewport viewport, OrthographicCamera guiCamera) {
+        this.engine = engine;
+        this.viewport = viewport;
+        this.guiCamera = guiCamera;
+        this.worldsStrongestPacifist = worldsStrongestPacifist;
+        systems = new Array<>();
+        factories = new Array<>();
         world = new World(new Vector2(0f, 0f), true);
         world.setContactListener(new CollisionListener());
+        viewport.getCamera().position.set(0, 0, 0);
 
         initialiseEntities();
         initialiseSystems();
@@ -57,83 +59,40 @@ public class GameScreen extends ScreenAdapter {
         createBoundary();
     }
 
+    private void createSystems() {
+//        systems.add(new PhysicsDebugSystem(world, (OrthographicCamera) viewport.getCamera()));
+        systems.add(new PhysicsSystem(world));
+        systems.add(new ParentSystem());
+        systems.add(new ExplosionSystem(world));
+        systems.add(new CollisionSystem());
+        systems.add(new ScoreSystem());
+        systems.add(new DeathSystem(world));
+        systems.add(new MovementSystem());
+        systems.add(new SpawnSystem());
+        systems.add(new AiSystem());
+        systems.add(new CameraSystem((OrthographicCamera) viewport.getCamera()));
+        systems.add(new LifetimeSystem());
+    }
+
     private void initialiseSystems() {
-        RendererSystem renderer = new RendererSystem(camera, guiCamera);
-        renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
-        MovementSystem movementSystem = new MovementSystem();
-        CameraSystem cameraSystem = new CameraSystem(camera);
-        InputSystem inputSystem = new InputSystem();
-        CollisionSystem collisionSystem = new CollisionSystem();
-        DeathSystem deathSystem = new DeathSystem(world);
-        SpawnSystem spawnSystem = new SpawnSystem();
-        AiSystem aiSystem = new AiSystem();
-        ExplosionSystem explosionSystem = new ExplosionSystem(world);
-        ParentSystem parentSystem = new ParentSystem();
-        LifetimeSystem lifetimeSystem = new LifetimeSystem();
-        PhysicsSystem physicsSystem = new PhysicsSystem(world);
-        PhysicsDebugSystem physicsDebugSystem = new PhysicsDebugSystem(world, camera);
-        ScoreSystem scoreSystem = new ScoreSystem();
-        engine.addSystem(renderer);
-//        engine.addSystem(physicsDebugSystem);
-        engine.addSystem(physicsSystem);
-        engine.addSystem(inputSystem);
-        engine.addSystem(parentSystem);
-        engine.addSystem(explosionSystem);
-        engine.addSystem(collisionSystem);
-        engine.addSystem(scoreSystem);
-        engine.addSystem(deathSystem);
-        engine.addSystem(movementSystem);
-        engine.addSystem(spawnSystem);
-        engine.addSystem(aiSystem);
-        engine.addSystem(cameraSystem);
-        engine.addSystem(lifetimeSystem);
-        inputActionManager.subscribe(inputSystem);
-        controllerActionManager.subscribe(inputSystem);
+        createSystems();
+        systems.forEach(engine::addSystem);
     }
 
     private void createPlayer() {
-        Entity player = new Entity();
-        Texture playerTexture = new Texture("sprites/player.png");
-        player.add(SpriteComponent.builder().texture(playerTexture).visible(true).build());//TODO - This should use a texture atlas - When we have more textures
-        player.add(PositionComponent.builder().x(0f).y(0f).build());
-        player.add(VelocityComponent.builder().speed(20f).velocity(new Vector2()).build());
-        player.add(InputComponent.builder().controllerDeadZone(0.2f).build());
-        player.add(CameraFollowComponent.builder().build());
-        player.add(CollisionComponent.builder().tag("Player").isStatic(false).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
-        player.add(HealthComponent.builder().health(1).build());
-        player.add(ScoreComponent.builder().score(0L).multiplier(1L).build());
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(0f, 0f);
-
-        PolygonShape box = new PolygonShape();
-        box.setAsBox(0.5f, 0.5f);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = box;
-        fixtureDef.friction = 0.0f;
-
-        Body body = world.createBody(bodyDef);
-        body.createFixture(fixtureDef);
-        body.setUserData(player);
-
-        BodyComponent bodyComponent = BodyComponent.builder()
-                .body(body)
-                .build();
-
-        box.dispose();
-
-        player.add(bodyComponent);
-        engine.addEntity(player);
+        EntityFactory playerFactory = new PlayerFactory(world);
+        factories.add(playerFactory);
+        playerFactory.create(engine, new Vector2(0f,0f));
     }
 
     private void createSpawners() {
         float delay = 5f;
         float delayDecrement = 0.1f;
         Entity enemySpawner = new Entity();
+        EntityFactory enemyFactory = new EnemyFactory(world);
+        factories.add(enemyFactory);
         enemySpawner.add(SpawnComponent.builder()
-                .factory(new EnemyFactory(world))
+                .factory(enemyFactory)
                 .amount(5)
                 .delay(delay)
                 .amountIncrement(1)
@@ -147,8 +106,10 @@ public class GameScreen extends ScreenAdapter {
                 .build());
 
         Entity barbellSpawner = new Entity();
+        EntityFactory barbellFactory = new BarbellFactory(world);
+        factories.add(barbellFactory);
         barbellSpawner.add(SpawnComponent.builder()
-                .factory(new BarbellFactory(world))
+                .factory(barbellFactory)
                 .amount(1)
                 .delay(delay)
                 .amountIncrement(0)
@@ -212,5 +173,18 @@ public class GameScreen extends ScreenAdapter {
     public void resize (int width, int height) {
         viewport.update(width, height);
         guiCamera.setToOrtho(false, width, height);
+    }
+
+    @Override
+    public void reset() {
+        worldsStrongestPacifist.switchScreen(ScreenName.GAME);
+    }
+
+    @Override
+    public void dispose () {
+        engine.removeAllEntities();
+        factories.forEach(EntityFactory::dispose);
+        systems.forEach(engine::removeSystem);
+        world.dispose();
     }
 }

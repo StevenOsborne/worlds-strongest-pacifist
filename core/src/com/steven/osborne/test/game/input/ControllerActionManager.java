@@ -38,7 +38,17 @@ public class ControllerActionManager extends ControllerAdapter {
     @Override
     public boolean axisMoved (Controller controller, int axisIndex, float value) {
         for (ControllerListener controllerListener : controllerListeners) {
-            if (controllerListener.onControllerInput(axisIndex, value)) {
+            if (controllerListener.onControllerAxisInput(axisIndex, value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean buttonDown (Controller controller, int buttonIndex) {
+        for (ControllerListener controllerListener : controllerListeners) {
+            if (controllerListener.onControllerButtonInput(buttonIndex)) {
                 return true;
             }
         }
