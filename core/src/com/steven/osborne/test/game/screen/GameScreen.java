@@ -47,13 +47,10 @@ public class GameScreen extends ScreenAdapter implements Screen {
         factories = new Array<>();
         world = new World(new Vector2(0f, 0f), true);
         world.setContactListener(new CollisionListener());
+        viewport.getCamera().position.set(0, 0, 0);
 
         initialiseEntities();
         initialiseSystems();
-    }
-
-    @Override
-    public void show () {
     }
 
     private void initialiseEntities() {
