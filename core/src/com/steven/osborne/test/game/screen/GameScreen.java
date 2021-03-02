@@ -38,8 +38,6 @@ public class GameScreen extends ScreenAdapter implements Screen {
     private World world;
     private WorldsStrongestPacifist worldsStrongestPacifist;
 
-    //TODO - REMEMBER THAT THIS IS A BRANCH!
-
     public GameScreen(WorldsStrongestPacifist worldsStrongestPacifist, Engine engine, Viewport viewport, OrthographicCamera guiCamera) {
         this.engine = engine;
         this.viewport = viewport;
