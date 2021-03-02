@@ -20,9 +20,6 @@ public class WorldsStrongestPacifist extends Game {
 	public static final float VIRTUAL_WIDTH = 1920 * PIXELS_TO_METERS; //60.0
 	public static final float VIRTUAL_HEIGHT = 1080 * PIXELS_TO_METERS; //33.75
 
-	private GameScreen gameScreen;
-	private MainMenuScreen mainMenuScreen;
-
 	private Engine engine;
 	private OrthographicCamera guiCamera;
 	private Viewport viewport;
@@ -59,12 +56,10 @@ public class WorldsStrongestPacifist extends Game {
 		}
 		switch (screenName) {
 			case MAIN_MENU:
-				mainMenuScreen = new MainMenuScreen(this, engine);
-				setScreen(mainMenuScreen);
+				setScreen(new MainMenuScreen(this, engine));
 				break;
 			case GAME:
-				gameScreen = new GameScreen(this, engine, viewport, guiCamera);
-				setScreen(gameScreen);
+				setScreen(new GameScreen(this, engine, viewport, guiCamera));
 				break;
 		}
 	}
