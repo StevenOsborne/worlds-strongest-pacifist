@@ -19,10 +19,12 @@ public class WorldsStrongestPacifist extends Game {
 	public static final float PIXELS_TO_METERS = 1.0f / 32.0f;
 	public static final float VIRTUAL_WIDTH = 1920 * PIXELS_TO_METERS; //60.0
 	public static final float VIRTUAL_HEIGHT = 1080 * PIXELS_TO_METERS; //33.75
+	public static final float VIRTUAL_WIDTH_GUI = 2560;
+	public static final float VIRTUAL_HEIGHT_GUI = 1440;
 
 	private Engine engine;
-	private OrthographicCamera guiCamera;
 	private Viewport viewport;
+	private Viewport guiViewport;
 
 	private InputActionManager inputActionManager;
 	private ControllerActionManager controllerActionManager;
@@ -30,8 +32,8 @@ public class WorldsStrongestPacifist extends Game {
 	@Override
 	public void create () {
 		engine = new Engine();
-		guiCamera = new OrthographicCamera();
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+		guiViewport = new FitViewport(VIRTUAL_WIDTH_GUI, VIRTUAL_HEIGHT_GUI);
 		viewport.apply();
 		inputActionManager = new InputActionManager();
 		controllerActionManager = new ControllerActionManager();
@@ -55,7 +57,7 @@ public class WorldsStrongestPacifist extends Game {
 				setScreen(new MainMenuScreen(this, engine));
 				break;
 			case GAME:
-				setScreen(new GameScreen(this, engine, viewport, guiCamera));
+				setScreen(new GameScreen(this, engine, viewport, guiViewport));
 				break;
 		}
 	}
@@ -65,7 +67,7 @@ public class WorldsStrongestPacifist extends Game {
 	}
 
 	private void initialiseSystems() {
-		RendererSystem renderer = new RendererSystem((OrthographicCamera) viewport.getCamera(), guiCamera);
+		RendererSystem renderer = new RendererSystem((OrthographicCamera) viewport.getCamera(), (OrthographicCamera) guiViewport.getCamera());
 		renderer.setBackgroundColour(new Vector3(0, 0.05f, 0.1f));
 		InputSystem inputSystem = new InputSystem(this);
 

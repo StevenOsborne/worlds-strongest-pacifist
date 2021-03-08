@@ -29,7 +29,6 @@ public class PlayerFactory implements EntityFactory {
         player.add(CameraFollowComponent.builder().build());
         player.add(CollisionComponent.builder().tag("Player").isStatic(false).destroyTags(Arrays.asList("Barbell", "Multiplier")).build());
         player.add(HealthComponent.builder().health(1).build());
-        player.add(ScoreComponent.builder().score(0L).multiplier(1L).build());
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;

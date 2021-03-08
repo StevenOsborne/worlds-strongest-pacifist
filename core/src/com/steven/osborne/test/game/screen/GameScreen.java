@@ -14,10 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.steven.osborne.test.game.WorldsStrongestPacifist;
-import com.steven.osborne.test.game.component.BodyComponent;
-import com.steven.osborne.test.game.component.CollisionComponent;
-import com.steven.osborne.test.game.component.PositionComponent;
-import com.steven.osborne.test.game.component.SpawnComponent;
+import com.steven.osborne.test.game.component.*;
 import com.steven.osborne.test.game.factory.BarbellFactory;
 import com.steven.osborne.test.game.factory.EnemyFactory;
 import com.steven.osborne.test.game.factory.EntityFactory;
@@ -28,20 +25,22 @@ import com.steven.osborne.test.game.system.*;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.steven.osborne.test.game.WorldsStrongestPacifist.VIRTUAL_HEIGHT_GUI;
+
 public class GameScreen extends ScreenAdapter implements Screen {
 
     private Array<EntitySystem> systems;
     private Array<EntityFactory> factories;
     private Engine engine;
-    private OrthographicCamera guiCamera;
     private Viewport viewport;
+    private Viewport guiViewport;
     private World world;
     private WorldsStrongestPacifist worldsStrongestPacifist;
 
-    public GameScreen(WorldsStrongestPacifist worldsStrongestPacifist, Engine engine, Viewport viewport, OrthographicCamera guiCamera) {
+    public GameScreen(WorldsStrongestPacifist worldsStrongestPacifist, Engine engine, Viewport viewport, Viewport guiViewport) {
         this.engine = engine;
         this.viewport = viewport;
-        this.guiCamera = guiCamera;
+        this.guiViewport = guiViewport;
         this.worldsStrongestPacifist = worldsStrongestPacifist;
         systems = new Array<>();
         factories = new Array<>();
@@ -57,6 +56,7 @@ public class GameScreen extends ScreenAdapter implements Screen {
         createPlayer();
         createSpawners();
         createBoundary();
+        createGui();
     }
 
     private void createSystems() {
@@ -123,6 +123,15 @@ public class GameScreen extends ScreenAdapter implements Screen {
         engine.addEntity(barbellSpawner);
     }
 
+    private void createGui() {
+        Entity score = new Entity();
+        score.add(UiComponent.builder().text("Score: 0    |    Multiplier: 0").build());
+        score.add(ScoreComponent.builder().score(0L).multiplier(1L).build());
+        score.add(PositionComponent.builder().x(-100).y((VIRTUAL_HEIGHT_GUI / 2) - 100).build());//TODO - COULD we use VIRTUAL sizes as reference in renderer?
+
+        engine.addEntity(score);
+    }
+
     private void createBoundary() {
         Entity leftWall = new Entity();
         leftWall.add(PositionComponent.builder().x(-33f).y(-19f).build());
@@ -172,7 +181,7 @@ public class GameScreen extends ScreenAdapter implements Screen {
     @Override
     public void resize (int width, int height) {
         viewport.update(width, height);
-        guiCamera.setToOrtho(false, width, height);
+        guiViewport.update(width, height);
     }
 
     @Override

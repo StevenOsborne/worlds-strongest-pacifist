@@ -11,10 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.steven.osborne.test.game.component.ExplosionComponent;
-import com.steven.osborne.test.game.component.PositionComponent;
-import com.steven.osborne.test.game.component.ScoreComponent;
-import com.steven.osborne.test.game.component.SpriteComponent;
+import com.steven.osborne.test.game.component.*;
 
 import static com.steven.osborne.test.game.WorldsStrongestPacifist.PIXELS_TO_METERS;
 
@@ -24,13 +21,12 @@ public class RendererSystem extends EntitySystem {
 
     private ImmutableArray<Entity> entities;
     private ImmutableArray<Entity> explosions;
-    private Entity scoreEntity;
-    private ScoreComponent scoreComponent;
+    private ImmutableArray<Entity> uiEntities;
 
     private ComponentMapper<SpriteComponent> textureComponentMapper = ComponentMapper.getFor(SpriteComponent.class);
     private ComponentMapper<PositionComponent> positionComponentMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<ExplosionComponent> explosionComponentMapper = ComponentMapper.getFor(ExplosionComponent.class);
-    private ComponentMapper<ScoreComponent> scoreComponentMapper = ComponentMapper.getFor(ScoreComponent.class);
+    private ComponentMapper<UiComponent> uiComponentMapper = ComponentMapper.getFor(UiComponent.class);
 
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
@@ -45,6 +41,7 @@ public class RendererSystem extends EntitySystem {
         this.camera = camera;
         this.guiCamera = guiCamera;
 
+        //TODO - Look into https://github.com/libgdx/libgdx/wiki/Distance-field-fonts for font scaling
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OpenSans-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.color = new Color(0, 1, 0.2f, 1);
@@ -59,8 +56,7 @@ public class RendererSystem extends EntitySystem {
     public void addedToEngine(Engine engine) {
         entities = engine.getEntitiesFor(Family.all(SpriteComponent.class, PositionComponent.class).get());
         explosions = engine.getEntitiesFor(Family.all(ExplosionComponent.class, PositionComponent.class).get());
-//        scoreEntity = engine.getEntitiesFor(Family.one(ScoreComponent.class).get()).first();
-//        scoreComponent = scoreComponentMapper.get(scoreEntity);
+        uiEntities = engine.getEntitiesFor(Family.all(UiComponent.class, PositionComponent.class).get());
     }
 
     public void update(float deltaTime) {
@@ -70,7 +66,7 @@ public class RendererSystem extends EntitySystem {
         renderEntities();
         renderBoundary();
         renderExplosions();
-//        renderGui();
+        renderGui();
     }
 
     private void renderEntities() {
@@ -99,7 +95,14 @@ public class RendererSystem extends EntitySystem {
         batch.setProjectionMatrix(guiCamera.combined);
 
         batch.begin();
-        font.draw(batch, String.format("Score: %d    | Multiplier: %d", scoreComponent.getScore(), scoreComponent.getMultiplier()), 2560f / 2f, 1440 - 200);
+        for (Entity entity : uiEntities) {
+            UiComponent uiComponent = uiComponentMapper.get(entity);
+            PositionComponent positionComponent = positionComponentMapper.get(entity);
+            font.draw(batch,
+                    uiComponent.getText(),
+                    positionComponent.getX(),
+                    positionComponent.getY());
+        }
         batch.end();
     }
 
